@@ -1,7 +1,7 @@
 package com.eld.besteld.listener
 
 interface DialogCallback {
-fun onClose()
+    fun onClose()
     fun onDemo()
     fun onTest()
     fun onRadio()

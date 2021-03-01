@@ -1,21 +1,19 @@
 package com.eld.besteld.utils
-
-import android.app.AlertDialog
-import android.app.Dialog
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.text.TextUtils.replace
 import android.view.*
-import android.widget.ImageView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.eld.besteld.R
 
+
 public class CommonUtils {
+
     companion object{
-    fun showCustomDialog(context: Context) {
-    }
-
-
         fun isOnline(context: Context): Boolean {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -34,4 +32,15 @@ public class CommonUtils {
                 return netInfo != null && netInfo.isConnectedOrConnecting
             }
         }
-}}
+
+        fun addFragment(fragment:Fragment){
+
+
+
+
+        }
+}
+
+
+
+}

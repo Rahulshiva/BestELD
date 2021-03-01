@@ -6,7 +6,7 @@ import retrofit2.http.*
 
 interface ApiInterface {
     @Headers("Content-Type: application/json")
-    @POST("login")
+    @POST("driver/login")
     fun addUser(@Body userData: LoginRequest): Call<LoginResponce>
 
 }

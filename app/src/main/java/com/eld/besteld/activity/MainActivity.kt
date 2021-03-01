@@ -1,6 +1,5 @@
 package com.eld.besteld.activity
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -12,6 +11,11 @@ import com.eld.besteld.R
 import java.util.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.eld.besteld.dialogs.DutyHourDialog
+import com.eld.besteld.dialogs.EldListDialog
+import com.eld.besteld.fragment.DutyInspectionFragment
+import com.eld.besteld.fragment.GraphFragment
+import com.eld.besteld.listener.EldDialogCallBack
 import com.iosix.eldblelib.EldBleConnectionStateChangeCallback
 import com.iosix.eldblelib.EldBleDataCallback
 import com.iosix.eldblelib.EldBleError
@@ -26,45 +30,73 @@ import com.iosix.eldblelib.EldDriverBehaviorRecord
 import com.iosix.eldblelib.EldFuelRecord
 import com.iosix.eldblelib.EldManager
 import com.iosix.eldblelib.EldScanObject
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
 
-class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickListener {
+class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickListener,
+    EldDialogCallBack {
     var MAC: String? = null
-    val context: Context = this
-    private var updateSelection = 0
-
+    private lateinit var context: Context
     private var mEldManager: EldManager? = null
     private var exit = false
     var reqdelinprogress = false
     var startseq = 0
     var endseq = 0
     var reccount = 0
+    private val eldDeviceList = mutableListOf<EldScanObject>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        context = this
         //Required to allow bluetooth scanning
+        checkPermissionble()
+        mEldManager = EldManager.GetEldManager(this, "123456789A")
+        runOnUiThread {
+        }
+        init()
+    }
+
+    private fun checkPermissionble() {
         requestPermissions(
             arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
                 //working here
             ), 1
         )
-        mEldManager = EldManager.GetEldManager(this, "123456789A")
-        runOnUiThread {
-
-        }
-
-        init()
     }
 
     private fun init() {
         settingClick()
+        showGraphFragment()
+        showDutyFragment()
+        commitingFragments()
     }
+
+    private fun showGraphFragment() {
+        val graphFragment = GraphFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.containerGraph, graphFragment)
+            .commit()
+    }
+
+    private fun showDutyFragment() {
+        val DutyInspectionFragment = DutyInspectionFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.listContainer, DutyInspectionFragment).commit()
+    }
+
+    private fun commitingFragments() {
+
+
+
+    }
+
 
     private fun settingClick() {
         bloothScanner.setOnClickListener(this)
+        ivDuty.setOnClickListener(this)
+        ivUserPic.setOnClickListener(this)
     }
-
 
     override fun onBackPressed() {
         if (exit) {
@@ -77,7 +109,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         }
     }
 
-
     private val bleConnectionStateChangeCallback: EldBleConnectionStateChangeCallback =
         object : EldBleConnectionStateChangeCallback() {
             override fun onConnectionStateChange(newState: Int) {
@@ -88,6 +119,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
                 }
             }
         }
+
+
     private val bleDataCallback: EldBleDataCallback = object : EldBleDataCallback() {
         override fun OnDataRecord(
             dataRec: EldBroadcast,
@@ -95,13 +128,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         ) {
             runOnUiThread {
                 if (dataRec is EldBufferRecord) {
-
                     startseq = dataRec.startSeqNo
                     endseq = dataRec.endSeqNo
                 } else if (RecordType == EldBroadcastTypes.ELD_DATA_RECORD) {
-
                 } else if (RecordType == EldBroadcastTypes.ELD_CACHED_RECORD) {
-
                     if (reqdelinprogress) {
                         reccount++
                         Log.d("TESTING", "received $reccount records")
@@ -200,6 +230,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
             }
         }
     }
+
+
     private val bleScanCallback: EldBleScanCallback = object : EldBleScanCallback() {
         override fun onScanResult(device: EldScanObject) {
             Log.d("BLETEST", "BleScanCallback single")
@@ -229,10 +261,17 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
             val strDevice: String
             val so: EldScanObject
             if (deviceList != null) {
+                progressbar.visibility = View.GONE
                 so = deviceList[0]
                 strDevice = so.deviceId
                 MAC = strDevice
-                runOnUiThread { }
+                eldDeviceList.addAll(deviceList)
+                settingEldDeviceRecycler()
+                runOnUiThread {
+
+
+                }
+
                 val res = mEldManager!!.ConnectToEld(
                     bleDataCallback,
                     EnumSet.of(
@@ -253,12 +292,21 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
                 }
             } else {
                 runOnUiThread {
-
-                    Toast.makeText(context,"No device found",Toast.LENGTH_LONG).show()
+                    progressbar.visibility = View.GONE
+                    Toast.makeText(context, "No device found", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
+
+    //setting eld recyler
+
+    private fun settingEldDeviceRecycler() {
+        val dialog = EldListDialog(this, eldDeviceList)
+        dialog.setCallback(context)
+        dialog.show(supportFragmentManager, "Home Activity")
+    }
+
 
     override fun onActivityResult(
         requestCode: Int,
@@ -279,8 +327,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     }
 
 
-    
-
     private fun ScanForEld() {
         if (mEldManager!!.ScanForElds(bleScanCallback) == EldBleError.BLUETOOTH_NOT_ENABLED) mEldManager!!.EnableBluetooth(
             REQUEST_BT_ENABLE
@@ -294,14 +340,33 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
 
     override fun onClick(view: View?) {
 
-        when(view?.id){
-
+        when (view?.id) {
             R.id.bloothScanner -> {
-                 ScanForEld()
+                progressbar.visibility = View.VISIBLE
+                ScanForEld()
+            }
+
+            R.id.ivDuty -> {
+                val dialog = DutyHourDialog()
+                dialog.settingCallBack(context)
+                dialog.show(supportFragmentManager, "Home Activity")
+            }
+
+            R.id.ivUserPic -> {
+
             }
         }
 
+
     }
+
+
+    //eld bluttoth device set listener
+    override fun onItemClick() {
+        //TODO("Not yet implemented")
+    }
+
+
 
 
 }

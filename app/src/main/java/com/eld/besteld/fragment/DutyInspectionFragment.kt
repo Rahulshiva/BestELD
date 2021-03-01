@@ -1,19 +1,64 @@
 package com.eld.besteld.fragment
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.eld.besteld.R
-
+import com.eld.besteld.adapter.DutyInspectionAdapter
+import com.eld.besteld.roomDataBase.DayData
+import com.eld.besteld.roomDataBase.DriverViewModel
+import com.eld.besteld.roomDataBase.EldDataBaseExicution
+import com.eld.besteld.roomDataBase.insertDriverInformationDao
+import kotlinx.android.synthetic.main.fragment_duty_inspection.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class DutyInspectionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-
+    private lateinit var mContext: Context
+    lateinit var viewModel: DriverViewModel
+    private var dayData = ArrayList<DayData>()
+    private var driverInformation: insertDriverInformationDao? = null
+    private lateinit var driverInoAdapter: DutyInspectionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+
+
+        driverInoAdapter = DutyInspectionAdapter(mContext)
+        viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
+        viewModel.dayDaya.observe(this, Observer {list
+            -> list?.let {
+            driverInoAdapter.UpdateList(it)
+
+        }
+
+
+        })
+        driverInformation = EldDataBaseExicution.invoke(mContext).getDriverDao()
+
+        //  fillingDriverStatusData()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        this.mContext = context
+    }
+
+    private fun setRecycler() {
+        rvDriverData.layoutManager = LinearLayoutManager(mContext)
+        driverInoAdapter = DutyInspectionAdapter(mContext)
+        rvDriverData.adapter = driverInoAdapter
+        //  driverInoAdapter.notifyDataSetChanged()
+
 
     }
 
@@ -25,5 +70,16 @@ class DutyInspectionFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_duty_inspection, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setRecycler()
 
+    }
+
+    private fun fillingDriverStatusData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            //  dayData = driverInformation?.getDayData()!!
+
+        }
+    }
 }

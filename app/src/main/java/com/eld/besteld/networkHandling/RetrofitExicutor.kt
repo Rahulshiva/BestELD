@@ -16,7 +16,8 @@ object RetrofitExecuter {
     ): ApiInterface {
 
       //  val BASE_URL = "13.233.111.74:5000"
-        val BASE_URL = "http:52.53.153.62:8080/api/"
+        val BASE_URL = "http:52.52.43.159:8080/api/"
+      //  val BASE_URL = "https://www.itsbesteld.com/api/"
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         val okHttpClient = OkHttpClient()

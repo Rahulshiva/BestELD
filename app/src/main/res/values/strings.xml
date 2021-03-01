@@ -18,4 +18,19 @@
     <string name="or">OR</string>
     <string name="finding_device">Finding Device</string>
     <string name="now_discoverable_your_device">Now discoverable your device</string>
+    <string name="dot">............................................</string>
+    <string name="enable_yard_move">Enable Yard Move</string>
+    <string name="sleeper">SLEEPER</string>
+    <string name="on_duty">ON DUTY</string>
+    <string name="off_duty">OFF DUTY</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="cancel">CANCEL</string>
+    <string name="hello_i_am_here">Hello i am here</string>
+    <string name="notes">Notes</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End Time</string>
+    <string name="enter_password">Please enter password.</string>
+    <string name="vehicles">Vehicles</string>
+    <string name="odometer">Odometer</string>
+    <string name="shipping_nos">Shipping Nos.</string>
 </resources>

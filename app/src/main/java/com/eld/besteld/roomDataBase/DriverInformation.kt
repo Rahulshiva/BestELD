@@ -1,7 +1,6 @@
 package com.eld.besteld.roomDataBase
 
 import android.os.Parcelable
-import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -11,52 +10,39 @@ import kotlinx.android.parcel.Parcelize
 @Entity
 data class DriverInformation(
 
-    @SerializedName("city")
-    val city: String?=null,
+    val zip: String = "",
 
-    @SerializedName("country")
-    val country: String?=null,
+    val lastName: String = "",
 
-    @SerializedName("dlBackPic")
-    val dlBackPic: String?=null,
+    val strAddress1: String = "",
 
-    @SerializedName("dlExpiryDate")
-    val dlExpiryDate: String?=null,
+    val FleetDotNuber: String = "",
 
-    @SerializedName("dlFrontPiv")
-    val dlFrontPiv: String,
+    val dlNumber: String = "",
 
-    @PrimaryKey @NonNull
-    @SerializedName ("dlNumber")
-    val dlNumber: String,
+    val strAddress2: String = "",
 
-    @SerializedName("email")
-    val email: String?=null,
+    val dlExpiryDate: String? = "",
 
-    @SerializedName("firstName")
-    val firstName: String?=null,
+    val email: String = "",
 
-    @SerializedName("FleetDotNuber")
-    val FleetDotNuber: String?=null ,
+    val country: String = "",
 
-    @SerializedName("lastName")
-    val lastName: String?=null,
+    val primaryPhone: String = "",
 
-    @SerializedName("primaryPhone")
-    val primaryPhone: String?=null,
+    val firstName: String = "",
 
-    @SerializedName("secondaryPhone")
-    val secondaryPhone: String?=null,
+    val state: String = "",
 
-    @SerializedName("state")
-    val state: String?=null,
+    val city: String = "",
 
-    @SerializedName("strAddress1")
-    val strAddress1: String?=null,
+    val dlBackPic: String = "",
 
-    @SerializedName("strAddress2")
-    val strAddress2: String?=null,
+    val dlFrontPiv: String="",
 
-    @SerializedName("zip")
-    val zip: String?=null
+    val secondaryPhone: String = "",
+
+    @PrimaryKey
+    val id: String = ""
+
 ) : Parcelable

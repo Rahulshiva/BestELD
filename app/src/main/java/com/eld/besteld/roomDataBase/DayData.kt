@@ -1,66 +1,50 @@
 package com.eld.besteld.roomDataBase
+
 import android.os.Parcelable
-import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity
 data class DayData(
-    @SerializedName("day")
-    val day : String? = null,
+    val day: String = "",
 
-    @SerializedName("id")
-    val dlNumber : String?=null,
+    val dlNumber: String = "",
 
-    @SerializedName("id")
-    val dutyStatus : String?=null,
+    val dutyStatus: String = "",
 
-    @SerializedName("id")
-    val endLatitude : String?=null,
+    val endLatitude: String = "",
 
-    @SerializedName("id")
-    val endLocation : String?=null,
+    val endLocation: String = "",
 
-    @SerializedName("id")
-    val endLongitude : String?=null,
+    val endLongitude: String = "",
 
-    @SerializedName("id")
-    val endOdometer : String?=null,
+    val endOdometer: String = "",
 
-    @SerializedName("id")
-    val endTime : String?=null,
+    val endTime: String = "",
 
-    @SerializedName("id")
-    val endTimeString : String?=null,
+    val endTimeString: String = "",
 
-    @PrimaryKey
-    @SerializedName("id")
-    val id : String,
+    @PrimaryKey(autoGenerate = true)
+    val autoID: Int,
 
-    @SerializedName("id")
-    val isVoilation : Boolean?=false,
+    val id: String,
 
-    @SerializedName("id")
-    val rideDesciption : String?=null,
+    val isVoilation: Boolean? = false,
 
-    @SerializedName("id")
-    val startLatitude : String?=null,
+    val rideDesciption: String = "",
 
-    @SerializedName("id")
-    val startLocation : String?=null,
+    val startLatitude: Double = 0.0,
 
-    @SerializedName("id")
-    val startLongitude : Double?=null,
+    val startLocation: String = "",
 
-    @SerializedName("id")
-    val startOdometer : String?=null,
+    val startLongitude: Double = 0.0,
 
-    @SerializedName("id")
-    val startTime : String?=null,
+    val startOdometer: String = "",
 
-    @SerializedName("id")
-    val startTimeString : String?=null
+    val startTime: String = "",
+
+    val startTimeString: String = "",
+    val date: String = ""
 ) : Parcelable

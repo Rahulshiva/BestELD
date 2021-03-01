@@ -133,7 +133,7 @@ class DualProgressView : View {
         ).toFloat()
         mOuterCircleColor = a.getColor(
             R.styleable.DualProgressView_dpv_inner_color,
-            ContextCompat.getColor(context, R.color.white)
+            ContextCompat.getColor(context, R.color.purple_700)
         )
         mInnerCircleColor = a.getColor(
             R.styleable.DualProgressView_dpv_outer_color,

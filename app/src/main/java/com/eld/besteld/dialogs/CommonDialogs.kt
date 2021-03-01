@@ -5,12 +5,10 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.print.PrintAttributes
 import android.view.*
 import androidx.fragment.app.DialogFragment
 import com.eld.besteld.R
 import com.eld.besteld.listener.DialogCallback
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.custom_dialog.ivClose
 import java.util.*

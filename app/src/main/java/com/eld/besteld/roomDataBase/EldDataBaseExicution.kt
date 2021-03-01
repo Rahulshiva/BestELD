@@ -4,10 +4,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database (entities = [DayData::class, DayMetaData::class, DriverInformation::class, Eld::class, Inspection::class], version = 1 )
+@Database (entities = [DayData::class, DayMetaData::class, DriverInformation::class, Eld::class, Inspection::class], version = 1 ,exportSchema = false)
 
 abstract class EldDataBaseExicution : RoomDatabase(){
 
+
+     abstract fun getDriverDao() : insertDriverInformationDao
 
     companion object{
 
@@ -27,12 +29,13 @@ abstract class EldDataBaseExicution : RoomDatabase(){
         private fun bindDataBase(context: Context) = Room.databaseBuilder(
             context.applicationContext,
                     EldDataBaseExicution::class.java,
-            "EldDatabase"
+            "EldDataBaseExicution"
 
         ).build()
     }
 
-    abstract val driverInformation : insertDriverInformationDao?
+   // abstract val driverInformation : insertDriverInformationDao?
+
 
 
 }

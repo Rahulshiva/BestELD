@@ -9,21 +9,25 @@
 
     <include android:id="@+id/toolbar"
         layout="@layout/custom_toolbar"/>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/toolbar">
+
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar">
+            android:layout_height="match_parent">
             <FrameLayout
                 android:id="@+id/containerGraph"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_200sdp">
+                android:layout_height="@dimen/_160sdp">
 
             </FrameLayout>
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/rlSelectDay"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_56sdp"
+                android:layout_height="@dimen/_46sdp"
                 android:elevation="@dimen/_10sdp"
                 android:layout_margin="@dimen/_2sdp"
                 android:layout_below="@id/containerGraph">
@@ -69,9 +73,16 @@
             </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
             <FrameLayout
+                android:id="@+id/listContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/rlSelectDay"/>
         </RelativeLayout>
-
+    <com.eld.besteld.utils.DualProgressView
+        android:id="@+id/progressbar"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
+</FrameLayout>
 </RelativeLayout>
