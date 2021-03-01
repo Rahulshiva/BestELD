@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.eld.besteld.dialogs.DutyHourDialog
 import com.eld.besteld.dialogs.EldListDialog
+import com.eld.besteld.dialogs.SelectDateDialogFragment
 import com.eld.besteld.fragment.DutyInspectionFragment
 import com.eld.besteld.fragment.GraphFragment
 import com.eld.besteld.listener.EldDialogCallBack
@@ -31,6 +32,8 @@ import com.iosix.eldblelib.EldFuelRecord
 import com.iosix.eldblelib.EldManager
 import com.iosix.eldblelib.EldScanObject
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_login.progressbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickListener,
@@ -87,8 +90,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
 
     private fun commitingFragments() {
 
-
-
     }
 
 
@@ -96,6 +97,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         bloothScanner.setOnClickListener(this)
         ivDuty.setOnClickListener(this)
         ivUserPic.setOnClickListener(this)
+        ivDown.setOnClickListener(this)
     }
 
     override fun onBackPressed() {
@@ -353,6 +355,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
             }
 
             R.id.ivUserPic -> {
+
+            }
+
+            R.id.ivDown ->{
+
+                val dialog = SelectDateDialogFragment()
+                dialog.settingCallBack(context)
+                dialog.show(supportFragmentManager,"Home ACtivity")
 
             }
         }
