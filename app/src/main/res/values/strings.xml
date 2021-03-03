@@ -33,4 +33,5 @@
     <string name="vehicles">Vehicles</string>
     <string name="odometer">Odometer</string>
     <string name="shipping_nos">Shipping Nos.</string>
+    <string name="long_dot">........................................</string>
 </resources>

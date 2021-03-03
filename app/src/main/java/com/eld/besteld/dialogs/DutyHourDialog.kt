@@ -38,9 +38,9 @@ class DutyHourDialog() : DialogFragment() {
     private val offDuty = 2131231065
     private val onDuty = 2131231066
     private val sleeper = 2131231067
-    private var startTime = "00:00"
-    private var endTime = "00:00"
-    private var temp = "00:00"
+    private var startTime = ""
+    private var endTime = ""
+    private var temp = ""
     private var startLatitude:Double = 0.0
     private var startLongitude:Double = 0.0
     private var id = ""
@@ -59,9 +59,6 @@ class DutyHourDialog() : DialogFragment() {
     override fun onStart() {
         super.onStart()
         setListener()
-
-        etStartTime.setText(startTime)
-        etEndTime.setText(endTime)
         settingCallBack(mContext)
         viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
         dayDataList = EldDataBaseExicution.invoke(mContext).getDriverDao()
@@ -96,7 +93,6 @@ class DutyHourDialog() : DialogFragment() {
         rbOffDuty.setOnClickListener(this::onClick)
         rbOnDuty.setOnClickListener(this::onClick)
         rbSleeper.setOnClickListener(this::onClick)
-       getCurruntTime()
         radioGroupDriverStatus.setOnCheckedChangeListener(object :
             RadioImageGroup.OnCheckedChangeListener {
             override fun onCheckedChanged(
@@ -118,11 +114,12 @@ class DutyHourDialog() : DialogFragment() {
         })
     }
 
-    private fun getCurruntTime():String {
-        val sdf = SimpleDateFormat("yyyy.MM.dd hh:mm:ss")
+    private fun getCurruntTime(): String {
+      //  val sdf = SimpleDateFormat("yyyy.MM.dd hh:mm:ss")
+        val sdf = SimpleDateFormat("hh:mm")
         val currentDate = sdf.format(Date())
         currentDate.get(1)
-        startTime = currentDate.get(0).toString()
+        startTime = currentDate.get(1).toString()
         return startTime
     }
 
@@ -131,6 +128,11 @@ class DutyHourDialog() : DialogFragment() {
             btnCancel -> dismiss()
             //  btnConfirm -> listener.onButtonConfirm(rbEnableYardMode.id,et)
             btnConfirm -> {
+
+            startTime =    getCurruntTime()
+                swapStartTimeEndTime(startTime)
+                etStartTime.setText(""+startTime)
+                etEndTime.setText(""+endTime)
                 dayData=(DayData(id = "233",startLatitude = startLatitude,startLongitude = startLongitude,rideDesciption = etNotes.text.toString(), startTime = startTime,endTime = endTime,autoID = 0,day = day))
                 viewModel?.insertDayData(dayData)
 
@@ -145,18 +147,12 @@ class DutyHourDialog() : DialogFragment() {
                 }
             }
             rbOffDuty -> {
-                startTime = getCurruntTime()
-                swapStartTimeEndTime(startTime)
             }
 
             rbOnDuty -> {
-                startTime = getCurruntTime()
-                swapStartTimeEndTime(startTime)
             }
 
             rbSleeper -> {
-                startTime = getCurruntTime()
-                swapStartTimeEndTime(startTime)
             }
         }
     }
@@ -167,10 +163,10 @@ class DutyHourDialog() : DialogFragment() {
 
         }    }
 
-    private fun swapStartTimeEndTime(startTime: String) {
+    private fun swapStartTimeEndTime( startTime: String) {
        temp = startTime
-        this.startTime = endTime
         endTime = temp
+        this.startTime = endTime
     }
 
     private fun checkPermission(): Boolean {
@@ -202,7 +198,6 @@ class DutyHourDialog() : DialogFragment() {
     ) {
         if (requestCode == PERMISSION_ID) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("Debug:", "You have the Permission")
             }
         }
     }

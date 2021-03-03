@@ -57,17 +57,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:gravity="center"
-                android:text="10:12" />
-
+                android:gravity="center"/>
             <EditText
                 android:id="@+id/etEndTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:gravity="center"
-                android:text="10:22" />
+                android:gravity="center"/>
         </LinearLayout>
 
         <LinearLayout

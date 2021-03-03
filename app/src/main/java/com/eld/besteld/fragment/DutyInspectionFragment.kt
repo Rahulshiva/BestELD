@@ -57,7 +57,6 @@ class DutyInspectionFragment : Fragment() {
         rvDriverData.layoutManager = LinearLayoutManager(mContext)
         driverInoAdapter = DutyInspectionAdapter(mContext)
         rvDriverData.adapter = driverInoAdapter
-        //  driverInoAdapter.notifyDataSetChanged()
 
 
     }
@@ -74,12 +73,5 @@ class DutyInspectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setRecycler()
 
-    }
-
-    private fun fillingDriverStatusData() {
-        CoroutineScope(Dispatchers.IO).launch {
-            //  dayData = driverInformation?.getDayData()!!
-
-        }
     }
 }
