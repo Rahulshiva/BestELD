@@ -70,3 +70,14 @@ class GraphFragment : Fragment() {
           yPosition = 135
  */
 
+/*
+        case .ONDUTY, .YARD: //4
+          yPosition = 165
+        case .OFFDUTY, .PERSONAL: // 1
+          yPosition = 61
+        case .SLEEPER:  //2
+          yPosition = 100
+        case .DRIVING:  //3
+          yPosition = 135
+ */
+

@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
@@ -22,13 +21,10 @@ import com.eld.besteld.R
 import com.eld.besteld.roomDataBase.*
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.duty_inspection_layout.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DutyHourDialog() : DialogFragment() {
+class DutyHourDialog : DialogFragment() {
 
     private lateinit var mContext: Context
     private var day = ""
@@ -38,14 +34,14 @@ class DutyHourDialog() : DialogFragment() {
     private val offDuty = 2131231065
     private val onDuty = 2131231066
     private val sleeper = 2131231067
-    private var startTime = ""
-    private var endTime = ""
-    private var temp = ""
-    private var startLatitude:Double = 0.0
-    private var startLongitude:Double = 0.0
+    private var startTime = 0L
+    private var endTime = 0L
+    private var temp =0L
+    private var startLatitude: Double = 0.0
+    private var startLongitude: Double = 0.0
     private var id = ""
-    private lateinit var dayData:DayData
-    private var dayDataList : insertDriverInformationDao?= null
+    private lateinit var dayData: DayData
+    private var dayDataList: insertDriverInformationDao? = null
     private lateinit var viewModel: DriverViewModel
 
 
@@ -56,6 +52,7 @@ class DutyHourDialog() : DialogFragment() {
     ): View? {
         return inflater.inflate(R.layout.duty_inspection_layout, container, false)
     }
+
     override fun onStart() {
         super.onStart()
         setListener()
@@ -73,8 +70,6 @@ class DutyHourDialog() : DialogFragment() {
         val dialog = Dialog(Objects.requireNonNull(mContext))
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window?.attributes?.windowAnimations = R.style.dialogAnimation
-        dialog.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT)
         dialog.setCanceledOnTouchOutside(true)
         dialog.window?.let {
             val layoutParams: WindowManager.LayoutParams = it.attributes
@@ -86,6 +81,7 @@ class DutyHourDialog() : DialogFragment() {
         }
         return dialog
     }
+
     private fun setListener() {
         btnConfirm.setOnClickListener(this::onClick)
         btnCancel.setOnClickListener(this::onClick)
@@ -114,12 +110,12 @@ class DutyHourDialog() : DialogFragment() {
         })
     }
 
-    private fun getCurruntTime(): String {
-      //  val sdf = SimpleDateFormat("yyyy.MM.dd hh:mm:ss")
+    private fun getCurruntTime(): Long {
+        //  val sdf = SimpleDateFormat("yyyy.MM.dd hh:mm:ss")
         val sdf = SimpleDateFormat("hh:mm")
         val currentDate = sdf.format(Date())
         currentDate.get(1)
-        startTime = currentDate.get(1).toString()
+        startTime = currentDate.get(1).toLong()
         return startTime
     }
 
@@ -129,14 +125,21 @@ class DutyHourDialog() : DialogFragment() {
             //  btnConfirm -> listener.onButtonConfirm(rbEnableYardMode.id,et)
             btnConfirm -> {
 
-            startTime =    getCurruntTime()
-                swapStartTimeEndTime(startTime)
-                etStartTime.setText(""+startTime)
-                etEndTime.setText(""+endTime)
-                dayData=(DayData(id = "233",startLatitude = startLatitude,startLongitude = startLongitude,rideDesciption = etNotes.text.toString(), startTime = startTime,endTime = endTime,autoID = 0,day = day))
-                viewModel?.insertDayData(dayData)
+                startTime = getCurruntTime()
 
-             //   listener.onDismissClicked(day, etNotes.text.toString(),dutyStatus,startTime,endTime)
+                dayData = (DayData(
+                    id = "233",
+                    startLatitude = startLatitude,
+                    startLongitude = startLongitude,
+                    rideDesciption = etNotes.text.toString(),
+                    startTime = startTime.toLong(),
+                    endTime = endTime,
+                    autoID = 0,
+                    day = day
+                ))
+                viewModel.insertDayData(dayData)
+
+                //   listener.onDismissClicked(day, etNotes.text.toString(),dutyStatus,startTime,endTime)
                 dismiss()
             }
             etLocation -> {
@@ -157,14 +160,9 @@ class DutyHourDialog() : DialogFragment() {
         }
     }
 
-    private fun usingBackgroundThread() {
-        CoroutineScope(Dispatchers.IO).launch {
-         //   dayDataList?.insertDayData(dayData)
 
-        }    }
-
-    private fun swapStartTimeEndTime( startTime: String) {
-       temp = startTime
+    private fun swapStartTimeEndTime(startTime: Long) {
+        temp = startTime
         endTime = temp
         this.startTime = endTime
     }
@@ -180,6 +178,7 @@ class DutyHourDialog() : DialogFragment() {
                 ) == PackageManager.PERMISSION_GRANTED
 
     }
+
     //check location is enabled or not
     fun isLocationEnabled(): Boolean {
         //this function will return to us the state of the location service
@@ -201,10 +200,11 @@ class DutyHourDialog() : DialogFragment() {
             }
         }
     }
+
     private fun getCityName(lat: Double, long: Double): String {
         var geoCoder = Geocoder(mContext, Locale.getDefault())
         var Adress = geoCoder.getFromLocation(lat, long, 3)
-        return Adress.get(1).getAddressLine(0);
+        return Adress.get(1).getAddressLine(0)
 
     }
 
@@ -217,7 +217,7 @@ class DutyHourDialog() : DialogFragment() {
                         NewLocationData()
                     } else {
                         day = getCityName(location.latitude, location.longitude)
-                        etLocation.setText(day)
+                        etLocation.text = day
                     }
                 }
             } else {
@@ -235,7 +235,7 @@ class DutyHourDialog() : DialogFragment() {
         ActivityCompat.requestPermissions(
             mContext as Activity,
             arrayOf(
-              Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ),
             PERMISSION_ID
@@ -269,10 +269,11 @@ class DutyHourDialog() : DialogFragment() {
             // for ActivityCompat#requestPermissions for more details.
             return
         }
-        fusedLocationProviderClient!!.requestLocationUpdates(
+        fusedLocationProviderClient.requestLocationUpdates(
             locationRequest, locationCallback, Looper.myLooper()
         )
     }
+
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             var lastLocation: Location = locationResult.lastLocation
@@ -280,7 +281,7 @@ class DutyHourDialog() : DialogFragment() {
             startLatitude = lastLocation.latitude
             startLongitude = lastLocation.longitude
             day = "" + getCityName(lastLocation.latitude, lastLocation.longitude)
-            etLocation.setText("" + getCityName(lastLocation.latitude, lastLocation.longitude))
+            etLocation.text = "" + getCityName(lastLocation.latitude, lastLocation.longitude)
         }
     }
 }

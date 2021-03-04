@@ -22,7 +22,7 @@ data class DayData(
 
     val endOdometer: String = "",
 
-    val endTime: String = "",
+    val endTime: Long,
 
     val endTimeString: String = "",
 
@@ -43,7 +43,7 @@ data class DayData(
 
     val startOdometer: String = "",
 
-    val startTime: String = "",
+    val startTime: Long,
 
     val startTimeString: String = "",
     val date: String = ""

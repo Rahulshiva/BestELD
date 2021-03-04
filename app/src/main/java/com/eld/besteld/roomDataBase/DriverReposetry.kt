@@ -12,9 +12,6 @@ class DriverReposetry(private val driverDao: insertDriverInformationDao) {
     }
 
     fun insertDriverIno(driverInformation:DriverInformation) {
-
         driverDao.insertDriverInformation(driverInformation)
     }
-
-
 }

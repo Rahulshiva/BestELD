@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="0dp"
     android:layout_gravity="bottom">
 
     <LinearLayout
@@ -73,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/timeShowing"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"
@@ -103,36 +105,39 @@
                 android:id="@+id/rbOffDuty"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:drawableIcon="@mipmap/location"
                 app:iconPosition="top"
-                app:iconSize="38dp"
+                app:iconSize="30dp"
+                app:iconColor="#99999999"
+                app:selectedIconColor="#99999999"
+                app:selectedBackgroundColor="@color/white"
+                app:drawableIcon="@drawable/sleeper_hdp"
                 android:layout_weight="1"
-                android:layout_gravity="start"
-                app:selectedBackgroundColor="#ddFFdd"
-                app:selectedIconColor="@color/teal_200"/>
+                android:layout_gravity="start"/>
 
             <com.aagito.imageradiobutton.RadioImageButton
                 android:id="@+id/rbOnDuty"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                app:iconColor="#3D8B15"
+                app:selectedIconColor="#3D8B15"
+                app:drawableIcon="@drawable/sleeper_hdp"
+                app:selectedBackgroundColor="@color/white"
                 android:layout_height="wrap_content"
-                app:drawableIcon="@mipmap/location"
                 app:iconPosition="top"
-                app:iconSize="38dp"
-                app:selectedBackgroundColor="#ddFFdd"
-                app:selectedIconColor="@android:color/black"
+                app:iconSize="30dp"
                 />
             <com.aagito.imageradiobutton.RadioImageButton
                 android:id="@+id/rbSleeper"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                app:drawableIcon="@mipmap/location"
                 app:iconPosition="top"
-                app:iconSize="38dp"
-                android:layout_gravity="end"
-                app:selectedBackgroundColor="#ddFFdd"
-                app:selectedIconColor="@color/teal_200"/>
+                app:iconSize="30dp"
+                app:selectedIconColor="#F7B900"
+                app:selectedBackgroundColor="@color/white"
+                app:iconColor="#F7B900"
+                app:drawableIcon="@drawable/sleeper_hdp"
+                android:layout_gravity="end"/>
         </com.aagito.imageradiobutton.RadioImageGroup>
 
         <LinearLayout

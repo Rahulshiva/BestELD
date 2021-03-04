@@ -29,8 +29,8 @@ class SelectDateDialogFragment : DialogFragment(){
 
     override fun onStart() {
         super.onStart()
-        settingDayListAdapter()
         settingCallBack(mContext)
+        settingDayListAdapter()
     }
 
     private fun settingDayListAdapter() {
