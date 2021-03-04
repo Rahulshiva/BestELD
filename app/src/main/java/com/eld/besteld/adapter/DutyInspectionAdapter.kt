@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eld.besteld.R
 import com.eld.besteld.roomDataBase.DayData
 import kotlinx.android.synthetic.main.driver_information_recycler_layout.view.*
+import kotlinx.android.synthetic.main.duty_inspection_layout.view.*
+import kotlinx.android.synthetic.main.duty_inspection_layout.view.tvStartTime
+import kotlinx.android.synthetic.main.odometer_reading_row_layout.view.*
 
 class DutyInspectionAdapter(
     private val mContext: Context
@@ -40,6 +43,8 @@ class DutyInspectionAdapter(
 
         holder.itemView.tvNotes.text = dayData.get(position).rideDesciption
         holder.itemView.tvLocation.text = dayData.get(position).day
+        holder.itemView.tvStartTime?.text = dayData.get(position).startTime
+        holder.itemView.tvEndtime?.text = dayData.get(position).endTime
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

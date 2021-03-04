@@ -34,9 +34,9 @@ class DutyHourDialog : DialogFragment() {
     private val offDuty = 2131231065
     private val onDuty = 2131231066
     private val sleeper = 2131231067
-    private var startTime = 0L
-    private var endTime = 0L
-    private var temp =0L
+    private var startTime = "0.0"
+    private var endTime =""
+    private var temp ="0.0"
     private var startLatitude: Double = 0.0
     private var startLongitude: Double = 0.0
     private var id = ""
@@ -110,12 +110,12 @@ class DutyHourDialog : DialogFragment() {
         })
     }
 
-    private fun getCurruntTime(): Long {
+    private fun getCurruntTime(): String {
         //  val sdf = SimpleDateFormat("yyyy.MM.dd hh:mm:ss")
         val sdf = SimpleDateFormat("hh:mm")
         val currentDate = sdf.format(Date())
-        currentDate.get(1)
-        startTime = currentDate.get(1).toLong()
+
+        startTime = currentDate
         return startTime
     }
 
@@ -127,17 +127,28 @@ class DutyHourDialog : DialogFragment() {
 
                 startTime = getCurruntTime()
 
+                if(endTime.equals("0.0"))
+                {
+                    endTime = startTime
+                }else{
+                    temp = startTime
+                    endTime = temp
+                    startTime = endTime
+
+                }
+
                 dayData = (DayData(
                     id = "233",
                     startLatitude = startLatitude,
                     startLongitude = startLongitude,
                     rideDesciption = etNotes.text.toString(),
-                    startTime = startTime.toLong(),
+                    startTime = startTime,
                     endTime = endTime,
                     autoID = 0,
                     day = day
                 ))
                 viewModel.insertDayData(dayData)
+                endTime = startTime
 
                 //   listener.onDismissClicked(day, etNotes.text.toString(),dutyStatus,startTime,endTime)
                 dismiss()
@@ -161,7 +172,7 @@ class DutyHourDialog : DialogFragment() {
     }
 
 
-    private fun swapStartTimeEndTime(startTime: Long) {
+    private fun swapStartTimeEndTime(startTime: String) {
         temp = startTime
         endTime = temp
         this.startTime = endTime
@@ -181,8 +192,6 @@ class DutyHourDialog : DialogFragment() {
 
     //check location is enabled or not
     fun isLocationEnabled(): Boolean {
-        //this function will return to us the state of the location service
-        //if the gps or the network provider is enabled then it will return true otherwise it will return false
         val locationManager =
             mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
@@ -243,8 +252,6 @@ class DutyHourDialog : DialogFragment() {
         return true
     }
     //fuction to allow user permission
-
-
     fun NewLocationData() {
         var locationRequest = LocationRequest()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -260,13 +267,6 @@ class DutyHourDialog : DialogFragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         fusedLocationProviderClient.requestLocationUpdates(

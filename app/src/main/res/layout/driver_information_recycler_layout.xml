@@ -30,27 +30,25 @@
             android:text=""/>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/tvstartDate"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:textSize="@dimen/_8ssp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:text=""/>
+    <TextView
+        android:id="@+id/tvendDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_8ssp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:text=""/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:text="12-09-2021"/>
-        <ImageView
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_gravity="end"
-            android:src="@mipmap/warning"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginEnd="@dimen/_10sdp"/>
 
-    </LinearLayout>
 
 </LinearLayout>
