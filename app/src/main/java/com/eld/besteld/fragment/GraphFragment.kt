@@ -49,9 +49,24 @@ class GraphFragment : Fragment() {
         return (0..1).map {
             DataPoint(it, random.nextInt(2) + 4)
         }*/
-        return listOf(DataPoint(0, 0),DataPoint(0, 0),DataPoint(30, 30),DataPoint(0, 30))
+        val firstPoint = DataPoint(0,200, 160,200)
+        val firstPoint2 = DataPoint(160,300, 300,300)
+        val firstPoint3 = DataPoint(300,400, 400,400)
+        val firstPoint4 = DataPoint(400,500, 500,500)
+        return listOf(firstPoint,firstPoint2,firstPoint3,firstPoint4)
 
     }
 }
 
+
+/*
+        case .ONDUTY, .YARD: //4
+          yPosition = 165
+        case .OFFDUTY, .PERSONAL: // 1
+          yPosition = 61
+        case .SLEEPER:  //2
+          yPosition = 100
+        case .DRIVING:  //3
+          yPosition = 135
+ */
 
