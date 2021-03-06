@@ -19,4 +19,8 @@ data class DayMetaData(
     @PrimaryKey
     @SerializedName("dlNumber")
     val dlNumber: String
+
+  /*  @PrimaryKey
+@SerializedName("dlNumber")
+val dlNumber: String*/
 ) : Parcelable

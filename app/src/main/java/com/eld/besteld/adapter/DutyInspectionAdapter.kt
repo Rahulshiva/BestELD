@@ -43,8 +43,8 @@ class DutyInspectionAdapter(
 
         holder.itemView.tvNotes.text = dayData.get(position).rideDesciption
         holder.itemView.tvLocation.text = dayData.get(position).day
-        holder.itemView.tvStartTime?.text = dayData.get(position).startTime
-        holder.itemView.tvEndtime?.text = dayData.get(position).endTime
+        holder.itemView.tvstarttime_?.text = dayData.get(position).startTime
+        holder.itemView.tvEndtime_?.text = dayData.get(position).endTime
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

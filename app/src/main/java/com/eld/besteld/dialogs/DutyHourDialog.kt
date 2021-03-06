@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -18,9 +19,24 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.aagito.imageradiobutton.RadioImageGroup
 import com.eld.besteld.R
+import com.eld.besteld.activity.MainActivity
+import com.eld.besteld.networkHandling.request.DayDatum
+import com.eld.besteld.networkHandling.request.DutyDataRequest
+import com.eld.besteld.networkHandling.request.Inspection
+import com.eld.besteld.networkHandling.responce.LoginResponce
 import com.eld.besteld.roomDataBase.*
+import com.eld.besteld.utils.CommonUtils
+import com.ethane.choosetobefit.web_services.RetrofitExecuter
+import com.ethane.choosetobefit.web_services.RetrofitExecuter.getApiInterface
 import com.google.android.gms.location.*
+import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.duty_inspection_layout.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,9 +47,9 @@ class DutyHourDialog : DialogFragment() {
     private var dutyStatus = ""
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var PERMISSION_ID = 1000
-    private val offDuty = 2131231065
-    private val onDuty = 2131231066
-    private val sleeper = 2131231067
+    private val offDuty = 2131231066
+    private val onDuty = 2131231067
+    private val sleeper = 2131231068
     private var startTime = "0.0"
     private var endTime =""
     private var temp ="0.0"
@@ -41,6 +57,9 @@ class DutyHourDialog : DialogFragment() {
     private var startLongitude: Double = 0.0
     private var id = ""
     private lateinit var dayData: DayData
+    private lateinit var dayDataGraph : List<DayDatum>
+    private lateinit var inspection : List<Inspection>
+    private lateinit var dutyDataRequest: DutyDataRequest
     private var dayDataList: insertDriverInformationDao? = null
     private lateinit var viewModel: DriverViewModel
 
@@ -98,12 +117,13 @@ class DutyHourDialog : DialogFragment() {
                 checkedId: Int
             ) {
 
+               // Toast.makeText(mContext,""+checkedId,Toast.LENGTH_LONG).show()
                 if (onDuty == checkedId) {
-                    dutyStatus = "onDuty"
+                    dutyStatus = "ONDUTY"
                 } else if (offDuty == checkedId) {
-                    dutyStatus = "offDuty"
+                    dutyStatus = "OFFDUTY"
                 } else if (sleeper == checkedId) {
-                    dutyStatus = "sleeper"
+                    dutyStatus = "SLEEPER"
                 }
             }
 
@@ -127,16 +147,15 @@ class DutyHourDialog : DialogFragment() {
 
                 startTime = getCurruntTime()
 
-                if(endTime.equals("0.0"))
+               /* if(endTime!=null)
                 {
                     endTime = startTime
-                }else{
+                }else{*/
                     temp = startTime
                     endTime = temp
                     startTime = endTime
 
-                }
-
+              //  }
                 dayData = (DayData(
                     id = "233",
                     startLatitude = startLatitude,
@@ -145,11 +164,17 @@ class DutyHourDialog : DialogFragment() {
                     startTime = startTime,
                     endTime = endTime,
                     autoID = 0,
+                    dutyStatus = dutyStatus,
                     day = day
                 ))
                 viewModel.insertDayData(dayData)
                 endTime = startTime
 
+                dayDataGraph =
+                    listOf(DayDatum(153,"xyz","ONDUTY","US,NY","US,NY","US,NY","US,NY","US,NY",""))
+
+                inspection = listOf(Inspection("werer","ewre","wer","werwre",true))
+                callLogBookApi()
                 //   listener.onDismissClicked(day, etNotes.text.toString(),dutyStatus,startTime,endTime)
                 dismiss()
             }
@@ -171,12 +196,53 @@ class DutyHourDialog : DialogFragment() {
         }
     }
 
+    private fun callLogBookApi() {
 
-    private fun swapStartTimeEndTime(startTime: String) {
-        temp = startTime
-        endTime = temp
-        this.startTime = endTime
-    }
+            if (CommonUtils.isOnline(mContext)) {
+                dutyDataRequest =DutyDataRequest (1612882460653,dayDataGraph,inspection)
+                var call =
+                    getApiInterface("", "eyJraWQiOiJLOSswR3hadytGYjVMY1VzWVwvUEFraVg0VGNkZmp5UFRiRTFodEpzUG5Lbz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhNTU3OTkyZi03YjAxLTQzY2ItYjg3NC04NjI2M2I4ODA0MjYiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMS5hbWF6b25hd3MuY29tXC91cy13ZXN0LTFfUU1wVHRscHJsIiwiY3VzdG9tOmlkIjoiMjQyMDJmNTAtNzIxOS0xMWViLTg3N2MtNWQ4NWIwMmQyMzkyIiwiY29nbml0bzp1c2VybmFtZSI6ImE1NTc5OTJmLTdiMDEtNDNjYi1iODc0LTg2MjYzYjg4MDQyNiIsImF1ZCI6IjRuM2g2MXU4N2kzdG9sNHE2YTNzb2toYnA0IiwiZXZlbnRfaWQiOiJmODJlNTlmYi1iYjQ2LTQ4ZDktYWM2My0xYzkyZGExODlhNDciLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTYxNTAwNzk1MywiY3VzdG9tOnN0YXR1cyI6ImFjdGl2ZSIsImV4cCI6MTYxNTAxMTU1MywiY3VzdG9tOnJvbGUiOiJkcml2ZXIiLCJpYXQiOjE2MTUwMDc5NTMsImVtYWlsIjoicGFua2Fqc3VuYWw2NkBnbWFpbC5jb20ifQ.BNJRMksx1UWOo3mAj4niIcn9opBHwMNFr23YFrT1hegFJ40McJ9IPMpYRQZwsOn5Pq0qt853bbSpD9I6tM3gXrUI2MU9juSnT0GZSpCuuF-LtSDt7hzLjWZwqCm0ppJnQ0IK7eCeJ9u6P3StrEj2F_nIJTVcc8aER1XFOIUrypX5XAqCGGCXeiC9v6nuyud37ioNkWotqX6PCG5SIGfGqa3OD_xwI91LpYLD4j0vI5ZXLMI2TLM7f9klkLD1kTfYc0BGkI8veg4cy7PVvUNL4pkFxbmbqAXfpkhXRnITqri1QCFUpwbO0UHCEzgAP5tI0YVXBNEwz_fQAWZMZJkudA", "sdf", false).createLogbook(dutyDataReq = dutyDataRequest)
+                Log.e("url", "" + call.request().url)
+                call.enqueue(object : retrofit2.Callback<LoginResponce?> {
+                    override fun onResponse(
+                        call: retrofit2.Call<LoginResponce?>,
+                        response: retrofit2.Response<LoginResponce?>
+                    ) {
+                        if (response.body() != null) {
+                            val loginResponce = response.body()
+
+                            //  fillingDriverProfile(profile)
+                            //saving driver information to the database from server
+                        } else {
+                            val gson = GsonBuilder().create()
+                            try {
+                                val jObjError = JSONObject(response.errorBody()!!.string())
+                                Toast.makeText(
+                                    context,
+                                    jObjError.getString("message").toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } catch (e: IOException) {
+                            }
+                        }
+                    }
+
+                    override fun onFailure(
+                        call: retrofit2.Call<LoginResponce?>,
+                        t: Throwable
+                    ) {
+                        call.cancel()
+                    }
+                })
+            }
+    else {
+                Toast.makeText(context, "Please check internet connection", Toast.LENGTH_LONG)
+            }
+
+        }
+
+
+
 
     private fun checkPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(

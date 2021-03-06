@@ -1,9 +1,11 @@
 package com.eld.besteld.utils
 import android.app.PendingIntent.getActivity
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.preference.PreferenceManager
 import android.text.TextUtils.replace
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -11,9 +13,12 @@ import androidx.fragment.app.FragmentActivity
 import com.eld.besteld.R
 
 
-public class CommonUtils {
+ class CommonUtils {
 
     companion object{
+
+        val START_TIME = ""
+        val STRING_VALUE = ""
         fun isOnline(context: Context): Boolean {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -34,11 +39,41 @@ public class CommonUtils {
         }
 
         fun addFragment(fragment:Fragment){
-
-
-
-
         }
+        fun defaultPreference(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+        fun customPreference(context: Context, name: String): SharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE)
+
+        inline fun SharedPreferences.editMe(operation: (SharedPreferences.Editor) -> Unit) {
+            val editMe = edit()
+            operation(editMe)
+            editMe.apply()
+        }
+
+        var SharedPreferences.userId
+            get() = getInt(START_TIME, 0)
+            set(value) {
+                editMe {
+                    it.putInt(START_TIME, value)
+                }
+            }
+
+        var SharedPreferences.password
+            get() = getString(STRING_VALUE, "")
+            set(value) {
+                editMe {
+                    it.putString(STRING_VALUE, value)
+                }
+            }
+
+        var SharedPreferences.clearValues
+            get() = { }
+            set(value) {
+                editMe {
+                    it.clear()
+                }
+            }
+
 }
 
 

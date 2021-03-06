@@ -104,9 +104,9 @@
             <com.aagito.imageradiobutton.RadioImageButton
                 android:id="@+id/rbOffDuty"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_40sdp"
                 app:iconPosition="top"
-                app:iconSize="30dp"
+                app:iconSize="20dp"
                 app:iconColor="#99999999"
                 app:selectedIconColor="#99999999"
                 app:selectedBackgroundColor="@color/white"
@@ -122,17 +122,17 @@
                 app:selectedIconColor="#3D8B15"
                 app:drawableIcon="@drawable/sleeper_hdp"
                 app:selectedBackgroundColor="@color/white"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_40sdp"
                 app:iconPosition="top"
-                app:iconSize="30dp"
+                app:iconSize="20dp"
                 />
             <com.aagito.imageradiobutton.RadioImageButton
                 android:id="@+id/rbSleeper"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_40sdp"
                 app:iconPosition="top"
-                app:iconSize="30dp"
+                app:iconSize="20dp"
                 app:selectedIconColor="#F7B900"
                 app:selectedBackgroundColor="@color/white"
                 app:iconColor="#F7B900"
@@ -150,24 +150,27 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:text="@string/off_duty"
-                android:textSize="@dimen/_14ssp"/>
+                android:textSize="@dimen/_12ssp"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/on_duty"
+                android:textColor="@color/black"
                 android:gravity="center"
-                android:textSize="@dimen/_14ssp"/>
+                android:textSize="@dimen/_12ssp"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:text="@string/sleeper"
-                android:textSize="@dimen/_14ssp"/>
+                android:textSize="@dimen/_12ssp"/>
         </LinearLayout>
 
         <RadioButton
@@ -183,6 +186,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_14sdp"
             android:layout_marginEnd="@dimen/_14sdp"
+            android:textColor="@color/black"
             android:text="@string/notes"
             android:textSize="@dimen/_12ssp" />
 
@@ -191,14 +195,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_10sdp"/>
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:textSize="@dimen/_12ssp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_14sdp"
             android:layout_marginEnd="@dimen/_14sdp"
-            android:text="@string/notes"
+            android:text="Your Location"
+            android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
         <TextView
@@ -209,9 +215,9 @@
             android:layout_marginEnd="@dimen/_10sdp"
             android:drawableEnd="@mipmap/location"
             android:gravity="bottom"
-            android:text="Your location"
+            android:textColorHint="@color/black"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14ssp" />
+            android:textSize="@dimen/_10ssp" />
 
         <LinearLayout
             android:layout_width="match_parent"
