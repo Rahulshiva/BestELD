@@ -8,7 +8,8 @@ import kotlinx.android.parcel.Parcelize
 
 
 @Parcelize
-data class Inspection (
+data class Inspection1 (
+
     @SerializedName("notes")
     private var notes: String? = null,
 

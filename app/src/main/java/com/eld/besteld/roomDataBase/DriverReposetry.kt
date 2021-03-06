@@ -1,6 +1,7 @@
 package com.eld.besteld.roomDataBase
 
 import androidx.lifecycle.LiveData
+import java.util.*
 
 class DriverReposetry(private val driverDao: insertDriverInformationDao) {
 
@@ -15,5 +16,9 @@ class DriverReposetry(private val driverDao: insertDriverInformationDao) {
         driverDao.insertDriverInformation(driverInformation)
     }
 
+    //TODO: Add a method to save day data
+    fun insertDayDataForDayMetaData(dayData:DayData, dayMetaData: Date, driverId: String) {
+        //if meta data is avaiable for that day
 
+    }
 }

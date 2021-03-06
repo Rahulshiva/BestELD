@@ -19,7 +19,6 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun insertDayData(dayData:DayData) = viewModelScope.launch( Dispatchers.IO ) {
-
         noteReposetry.insertDayData(dayData)
     }
 

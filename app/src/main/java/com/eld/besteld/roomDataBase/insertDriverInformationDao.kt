@@ -18,4 +18,6 @@ interface insertDriverInformationDao {
     @Query("select * from DayData")
     fun getDayData(): LiveData<List<DayData>>
 
+    @Query("select * from DayMetaData")
+    fun getDayMetaData():LiveData<List<DayMetaData>>
 }
