@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
 
     }
 
-
     private fun settingClick() {
         bloothScanner.setOnClickListener(this)
         ivDuty.setOnClickListener(this)

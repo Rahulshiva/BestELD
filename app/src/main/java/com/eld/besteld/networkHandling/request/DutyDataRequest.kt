@@ -14,11 +14,11 @@ data class DutyDataRequest(
 
     @SerializedName("dayData")
     @Expose
-    private var dayData: List<DayDatum?>? = null,
+    private var dayData: List<DayDatum?>? = null
 
-    @SerializedName("inspection")
-    @Expose
-    private var inspection: List<Inspection?>? =
-        null
+//    @SerializedName("inspection")
+//    @Expose
+//    private var inspection: List<Inspection?>? =
+//        null
 
 ) : Parcelable

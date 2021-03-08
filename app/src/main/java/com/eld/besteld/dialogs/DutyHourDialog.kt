@@ -9,11 +9,13 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,10 +24,10 @@ import com.eld.besteld.R
 import com.eld.besteld.activity.MainActivity
 import com.eld.besteld.networkHandling.request.DayDatum
 import com.eld.besteld.networkHandling.request.DutyDataRequest
-import com.eld.besteld.networkHandling.request.Inspection
 import com.eld.besteld.networkHandling.responce.LoginResponce
 import com.eld.besteld.roomDataBase.*
 import com.eld.besteld.utils.CommonUtils
+import com.eld.besteld.utils.DataHandler
 import com.ethane.choosetobefit.web_services.RetrofitExecuter
 import com.ethane.choosetobefit.web_services.RetrofitExecuter.getApiInterface
 import com.google.android.gms.location.*
@@ -139,6 +141,7 @@ class DutyHourDialog : DialogFragment() {
         return startTime
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onClick(view: View) {
         when (view) {
             btnCancel -> dismiss()
@@ -167,13 +170,16 @@ class DutyHourDialog : DialogFragment() {
                     dutyStatus = dutyStatus,
                     day = day
                 ))
-                viewModel.insertDayData(dayData)
+                var currentDriver = DataHandler.currentDriver
+                if (currentDriver != null) {
+                    viewModel.insertDayDataForDayMetaData(dayData, Date(), currentDriver.dlNumber )
+                }//insertDayData(dayData)
                 endTime = startTime
 
                 dayDataGraph =
                     listOf(DayDatum(153,"xyz","ONDUTY","US,NY","US,NY","US,NY","US,NY","US,NY",""))
 
-                inspection = listOf(Inspection("werer","ewre","wer","werwre",true))
+              //  inspection = listOf(Inspection("werer","ewre","wer","werwre",true))
                 callLogBookApi()
                 //   listener.onDismissClicked(day, etNotes.text.toString(),dutyStatus,startTime,endTime)
                 dismiss()
@@ -199,7 +205,7 @@ class DutyHourDialog : DialogFragment() {
     private fun callLogBookApi() {
 
             if (CommonUtils.isOnline(mContext)) {
-                dutyDataRequest =DutyDataRequest (1612882460653,dayDataGraph,inspection)
+                dutyDataRequest =DutyDataRequest (1612882460653,dayDataGraph)
                 var call =
                     getApiInterface("", "eyJraWQiOiJLOSswR3hadytGYjVMY1VzWVwvUEFraVg0VGNkZmp5UFRiRTFodEpzUG5Lbz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhNTU3OTkyZi03YjAxLTQzY2ItYjg3NC04NjI2M2I4ODA0MjYiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMS5hbWF6b25hd3MuY29tXC91cy13ZXN0LTFfUU1wVHRscHJsIiwiY3VzdG9tOmlkIjoiMjQyMDJmNTAtNzIxOS0xMWViLTg3N2MtNWQ4NWIwMmQyMzkyIiwiY29nbml0bzp1c2VybmFtZSI6ImE1NTc5OTJmLTdiMDEtNDNjYi1iODc0LTg2MjYzYjg4MDQyNiIsImF1ZCI6IjRuM2g2MXU4N2kzdG9sNHE2YTNzb2toYnA0IiwiZXZlbnRfaWQiOiJmODJlNTlmYi1iYjQ2LTQ4ZDktYWM2My0xYzkyZGExODlhNDciLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTYxNTAwNzk1MywiY3VzdG9tOnN0YXR1cyI6ImFjdGl2ZSIsImV4cCI6MTYxNTAxMTU1MywiY3VzdG9tOnJvbGUiOiJkcml2ZXIiLCJpYXQiOjE2MTUwMDc5NTMsImVtYWlsIjoicGFua2Fqc3VuYWw2NkBnbWFpbC5jb20ifQ.BNJRMksx1UWOo3mAj4niIcn9opBHwMNFr23YFrT1hegFJ40McJ9IPMpYRQZwsOn5Pq0qt853bbSpD9I6tM3gXrUI2MU9juSnT0GZSpCuuF-LtSDt7hzLjWZwqCm0ppJnQ0IK7eCeJ9u6P3StrEj2F_nIJTVcc8aER1XFOIUrypX5XAqCGGCXeiC9v6nuyud37ioNkWotqX6PCG5SIGfGqa3OD_xwI91LpYLD4j0vI5ZXLMI2TLM7f9klkLD1kTfYc0BGkI8veg4cy7PVvUNL4pkFxbmbqAXfpkhXRnITqri1QCFUpwbO0UHCEzgAP5tI0YVXBNEwz_fQAWZMZJkudA", "sdf", false).createLogbook(dutyDataReq = dutyDataRequest)
                 Log.e("url", "" + call.request().url)

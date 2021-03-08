@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity
 data class DayData(
-    val day: String = "",
+    var day: String = "",
 
     val dlNumber: String = "",
 

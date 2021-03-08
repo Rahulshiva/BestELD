@@ -20,11 +20,11 @@ data class DayMetaData(
     val driverId: String,
 
     @SerializedName("dlNumber")
-    val dlNumber: String,
+    val dlNumber: String
 
-    val dayDataArray: List<DayData>? = null,
+//    val dayDataArray: DayData? = null,
 
-    val inspectionArray: List<Inspection>? = null
+//    val inspectionArray: Inspection? = null
   /*  @PrimaryKey
 @SerializedName("dlNumber")
 val dlNumber: String*/
