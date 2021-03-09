@@ -1,6 +1,7 @@
 package com.eld.besteld.roomDataBase
 
 import android.app.Application
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
@@ -16,20 +17,18 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
     val dayDaya : LiveData<List<DayData>>
 
     init{
-        val dao = EldDataBaseExicution.invoke(application).getDriverDao()
-        noteReposetry = DriverReposetry(dao)
+        val dao = EldDataBaseExicution.invoke(application)?.getDriverDao()
+        noteReposetry = DriverReposetry(dao!!)
         dayDaya = noteReposetry.allInfromation
     }
 
+    /*
     fun insertDayData(dayData:DayData) = viewModelScope.launch( Dispatchers.IO ) {
         noteReposetry.insertDayData(dayData)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun insertDayDataForDayMetaData(dayData:DayData, dayMetaData: Date, dlNumber: String) {
-        noteReposetry.insertDayDataForDayMetaData(dayData, dayMetaData, dlNumber)
-    }
-
+*/
     fun insertDriverInfromation(driverInformation: DriverInformation) = viewModelScope.launch (Dispatchers.IO){
         noteReposetry.insertDriverIno(driverInformation)
     }

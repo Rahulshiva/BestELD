@@ -64,6 +64,7 @@ class DutyHourDialog : DialogFragment() {
     private lateinit var dutyDataRequest: DutyDataRequest
     private var dayDataList: insertDriverInformationDao? = null
     private lateinit var viewModel: DriverViewModel
+    private lateinit var logDataViewModel: LogDataViewModel
 
 
     override fun onCreateView(
@@ -79,7 +80,8 @@ class DutyHourDialog : DialogFragment() {
         setListener()
         settingCallBack(mContext)
         viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
-        dayDataList = EldDataBaseExicution.invoke(mContext).getDriverDao()
+        logDataViewModel = ViewModelProvider(this).get(LogDataViewModel::class.java)
+        dayDataList = EldDataBaseExicution.invoke(mContext)?.getDriverDao()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext)
     }
 
@@ -159,6 +161,11 @@ class DutyHourDialog : DialogFragment() {
                     startTime = endTime
 
               //  }
+                var logDataEndTime = Date()
+                if (DataHandler.currentDayData != null) {
+                    //logDataEndTime = logDataEndTime.
+                    //TODO: Update end time for old event
+                }
                 dayData = (DayData(
                     id = "233",
                     startLatitude = startLatitude,
@@ -168,11 +175,13 @@ class DutyHourDialog : DialogFragment() {
                     endTime = endTime,
                     autoID = 0,
                     dutyStatus = dutyStatus,
-                    day = day
+                    dlNumber = DataHandler.currentDriver.dlNumber,
+                    day = "123456"
                 ))
                 var currentDriver = DataHandler.currentDriver
                 if (currentDriver != null) {
-                    viewModel.insertDayDataForDayMetaData(dayData, Date(), currentDriver.dlNumber )
+                    logDataViewModel.insertDayDataForDayMetaData(dayData, Date(), currentDriver.dlNumber)
+                    DataHandler.currentDayData = dayData
                 }//insertDayData(dayData)
                 endTime = startTime
 

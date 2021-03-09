@@ -20,8 +20,4 @@ interface insertDriverInformationDao {
     @Query("select * from DayMetaData")
     fun getDayMetaData():LiveData<List<DayMetaData>>
 
-
-    @Transaction
-    @Query("SELECT * FROM DayMetaData where day = :inDay")
-    fun getUsersWithPlaylists(inDay: String): List<DayMetaDataWithDayDataList>
 }

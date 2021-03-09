@@ -54,18 +54,17 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
         context = this
         init()
         viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
+        if (CommonUtils.DEBUB_MODE == true) {
+            etEmail.setText("pankajsunal66@gmail.com".toString())
+            etPassword.setText("Pankaj@123".toString())
+        }
         viewModel.dayDaya.observe(this, Observer {
-
-            if (CommonUtils.DEBUB_MODE == true) {
-                etEmail.setText("pankajsunal66@gmail.com".toString())
-                etPassword.setText("Pankaj@123".toString())
-            }
         })
        // mDriverInformation = DriverInformation("city","country","dlBackPic","dlExpiryDate","dlFrontPic","dlNumber")
     }
 
     private fun init() {
-        driverInformation = EldDataBaseExicution.invoke(context).getDriverDao()
+        driverInformation = EldDataBaseExicution.invoke(context)?.getDriverDao()
 
         timeToStartOfTheDay(LocalDateTime.now())
         timeToStartOfTheDay1(Date())

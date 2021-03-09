@@ -11,12 +11,17 @@ import com.eld.besteld.R
 import java.util.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.eld.besteld.dialogs.DutyHourDialog
 import com.eld.besteld.dialogs.EldListDialog
 import com.eld.besteld.dialogs.SelectDateDialogFragment
 import com.eld.besteld.fragment.DutyInspectionFragment
 import com.eld.besteld.fragment.GraphFragment
 import com.eld.besteld.listener.EldDialogCallBack
+import com.eld.besteld.roomDataBase.DayMetaData
+import com.eld.besteld.roomDataBase.DriverViewModel
+import com.eld.besteld.roomDataBase.LogDataViewModel
+import com.eld.besteld.utils.DataHandler
 import com.iosix.eldblelib.EldBleConnectionStateChangeCallback
 import com.iosix.eldblelib.EldBleDataCallback
 import com.iosix.eldblelib.EldBleError
@@ -48,15 +53,27 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     var reccount = 0
     private val eldDeviceList = mutableListOf<EldScanObject>()
 
+    lateinit var dataViewModel: LogDataViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
         //Required to allow bluetooth scanning
         checkPermissionble()
+
+        dataViewModel = ViewModelProvider(this).get(LogDataViewModel::class.java)
+
         mEldManager = EldManager.GetEldManager(this, "123456789A")
         runOnUiThread {
         }
         init()
+
+       // enterInitailEntery()
+    }
+
+    private fun enterInitailEntery() {
+        var dayDataObj = DayMetaData("123456","34434","xyz", "DJHDS324234")//DataHandler.currentDriver.dlNumber
+        dataViewModel.insertDayMetaData(dayDataObj)
     }
 
     private fun checkPermissionble() {
@@ -70,9 +87,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     }
 
     private fun init() {
-        settingClick()
-        showGraphFragment()
         showDutyFragment()
+        showGraphFragment()
+        settingClick()
         commitingFragments()
     }
 

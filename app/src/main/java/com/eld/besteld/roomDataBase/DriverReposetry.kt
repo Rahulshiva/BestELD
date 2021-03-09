@@ -11,7 +11,6 @@ import java.util.*
 
 class DriverReposetry(private val driverDao: insertDriverInformationDao) {
 
-
     val allInfromation: LiveData<List<DayData>> = driverDao.getDayData()
 
     fun insertDayData(dayData:DayData) {
@@ -24,6 +23,7 @@ class DriverReposetry(private val driverDao: insertDriverInformationDao) {
 
     //TODO: Add a method to save day data
     //@RequiresApi(Build.VERSION_CODES.O)
+    /*
     fun insertDayDataForDayMetaData(dayData:DayData, dayMetaData: Date, dlNumber: String) {
         //if meta data is avaiable for that day
         //convert date to start of the day
@@ -43,7 +43,7 @@ class DriverReposetry(private val driverDao: insertDriverInformationDao) {
             print("get some data")
         }else {
 
-        }
+        }*/
 
         /*
         val now = DateTime()
@@ -63,5 +63,5 @@ class DriverReposetry(private val driverDao: insertDriverInformationDao) {
         //
         //final LocalDateTime startOfDay       = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
         //final Date          startOfDayAsDate = Date.from(startOfDay.toInstant(ZoneOffset.UTC));
-    }
+   // }
 }
