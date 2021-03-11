@@ -4,6 +4,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class TimeUtility {
@@ -15,6 +16,15 @@ class TimeUtility {
         fun currentDateUTC(): LocalDateTime {
             var localeTime = LocalDateTime.now(ZoneOffset.UTC);
             return  localeTime
+        }
+
+        fun timeForDateString(dateString: String): String {
+//            String str = "2016-03-04 11:30";
+            val timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") //2021-03-11T19:01:39.428
+            //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+            val dateTime = LocalDateTime.parse(dateString)
+            val timeString = dateTime.hour.toString() + ":" + dateTime.minute.toString()
+            return timeString
         }
 
         fun timeToStartOfTheDay(inDate: LocalDateTime) {

@@ -27,6 +27,7 @@ import com.eld.besteld.roomDataBase.*
 import com.eld.besteld.utils.CommonUtils
 import com.eld.besteld.utils.DataHandler
 import com.eld.besteld.utils.DutyStatus
+import com.eld.besteld.utils.TimeUtility
 import com.ethane.choosetobefit.web_services.RetrofitExecuter.getApiInterface
 import com.google.android.gms.location.*
 import com.google.gson.GsonBuilder
@@ -128,15 +129,6 @@ class DutyHourDialog : DialogFragment() {
         })
     }
 
-    private fun getCurruntTime(): String {
-        //  val sdf = SimpleDateFormat("yyyy.MM.dd hh:mm:ss")
-        val sdf = SimpleDateFormat("hh:mm")
-        val currentDate = sdf.format(Date())
-
-        startTime = currentDate
-        return startTime
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun onClick(view: View) {
         when (view) {
@@ -144,7 +136,7 @@ class DutyHourDialog : DialogFragment() {
             //  btnConfirm -> listener.onButtonConfirm(rbEnableYardMode.id,et)
             btnConfirm -> {
                 DataHandler.logDataViewModel = logDataViewModel
-                DataHandler.dutyStatusChanged(dutyStatus, etNotes.text.toString(), Date())
+                DataHandler.dutyStatusChanged(dutyStatus, etNotes.text.toString(), TimeUtility.currentDateUTC())
                 dismiss()
             }
             etLocation -> {

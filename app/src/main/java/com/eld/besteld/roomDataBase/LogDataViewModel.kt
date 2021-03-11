@@ -21,6 +21,10 @@ class LogDataViewModel(application: Application) : AndroidViewModel(application)
         logReposetry.insertDayDataForDayMetaData(dayData, dayMetaData, dlNumber)
     }
 
+    fun updateDayData(dayData:DayData)=viewModelScope.launch (Dispatchers.IO){    //I add Dispatchers.IO
+        logReposetry.updateDayData(dayData)
+    }
+
     fun insertDayMetaData(metaData: DayMetaData)=viewModelScope.launch (Dispatchers.IO){    //I add Dispatchers.IO
         logReposetry.insertDayMetaData(metaData)
     }

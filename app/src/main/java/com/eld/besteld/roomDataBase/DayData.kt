@@ -26,9 +26,9 @@ data class DayData(
 
     var endTimeString: String = "",
 
-    @PrimaryKey(autoGenerate = true)
-    val autoID: Int,
+    //val autoID: String,
 
+    @PrimaryKey
     val id: String,
 
     val isVoilation: Boolean? = false,
@@ -46,5 +46,6 @@ data class DayData(
     val startTime: String = "",
 
     val startTimeString: String = "",
+
     val date: String = ""
 ) : Parcelable

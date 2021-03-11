@@ -17,4 +17,5 @@ interface  DayMetaDataDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDayMetaData(metaDta: DayMetaData)
 
+
 }

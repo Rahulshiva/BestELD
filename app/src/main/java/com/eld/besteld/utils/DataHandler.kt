@@ -6,6 +6,7 @@ import com.eld.besteld.roomDataBase.DriverInformation
 import com.eld.besteld.roomDataBase.LogDataViewModel
 import kotlinx.android.synthetic.main.duty_inspection_layout.*
 import java.sql.Driver
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -26,17 +27,16 @@ internal object DataHandler {
         currentDutyStatus = DutyStatus.OFFDUTY
     }
 
-    fun createDayData(start: Date, end: Date, status: DutyStatus, desciption: String?, driver: DriverInformation): DayData {
+    fun createDayData(start: LocalDateTime, end: LocalDateTime, status: DutyStatus, desciption: String?, driver: DriverInformation): DayData {
         val startLatitude = 12312321.777// LocationHandler.locationLatitude()
         var startLongitude = 777777.777//LocationHandler.locationLongitude()
         //var cityName = LocationHandler.cityName()
-        var dayDataObj = DayData(id = "233",
+        var dayDataObj = DayData(id = TimeUtility.currentDateUTC().toString(),
             startLatitude = startLatitude,
             startLongitude = startLongitude,
             rideDesciption = desciption ?: "",
             startTime = start.toString(),
             endTime = end.toString(),
-            autoID = 0,
             dutyStatus = status.rawValue,
             dlNumber = driver.dlNumber ?:  "1231231233",
             day = "day"
@@ -46,7 +46,7 @@ internal object DataHandler {
     }
 
 
-    fun dutyStatusChanged(status: DutyStatus, description: String?, timeToStart: Date? = null) {
+    fun dutyStatusChanged(status: DutyStatus, description: String?, timeToStart: LocalDateTime? = null) {
         if (status == currentDutyStatus) {
             return //same status
         }
@@ -72,15 +72,18 @@ internal object DataHandler {
 
 
 
-    fun performDutyStatusChanged(description: String?, startTime: Date? = null, dutyStatus: DutyStatus) {
+    fun performDutyStatusChanged(description: String?, startTime: LocalDateTime? = null, dutyStatus: DutyStatus) {
 //        if (currentDayData == null) {
 //            return //Invalid data
 //        }
 
-        //currentDayData.endTime = startTime.toString() ?: Date().toString()
-        //currentDayData.endTimeString = startTime.toString() ?: Date().toString()
+        if (currentDayData != null) {
+            currentDayData!!.endTime = startTime.toString() ?: Date().toString()
+            currentDayData!!.endTimeString = startTime.toString() ?: Date().toString()
+            logDataViewModel.updateDayData(currentDayData!!)
+        }
 
-        val currentDayData1 = createDayData(startTime ?: Date(),Date(),dutyStatus,description,currentDriver)
+        val currentDayData1 = createDayData(startTime ?: TimeUtility.currentDateUTC(),TimeUtility.currentDateUTC(),dutyStatus,description,currentDriver)
 //        logDataViewModel = ViewModelProvider(this).get(LogDataViewModel::class.java)
         logDataViewModel.insertDayDataForDayMetaData(currentDayData1,Date(),DataHandler.currentDriver.dlNumber)
         currentDayData = currentDayData1
