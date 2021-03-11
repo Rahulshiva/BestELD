@@ -3,12 +3,14 @@ package com.eld.besteld.activity
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.*
+import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +19,10 @@ import com.eld.besteld.dialogs.CommonDialogs
 import com.eld.besteld.listener.DialogCallback
 import com.eld.besteld.networkHandling.request.LoginRequest
 import com.eld.besteld.networkHandling.responce.LoginResponce
-import com.eld.besteld.roomDataBase.*
+import com.eld.besteld.roomDataBase.DriverInformation
+import com.eld.besteld.roomDataBase.DriverViewModel
+import com.eld.besteld.roomDataBase.EldDataBaseExicution
+import com.eld.besteld.roomDataBase.insertDriverInformationDao
 import com.eld.besteld.utils.CommonUtils
 import com.ethane.choosetobefit.web_services.RetrofitExecuter
 import com.google.gson.GsonBuilder
@@ -30,6 +35,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import java.sql.Timestamp
+import java.time.*
+import java.util.*
 
 class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickListener, TextWatcher,
 
@@ -47,17 +55,75 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
         context = this
         init()
         viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
+        if (CommonUtils.DEBUB_MODE == true) {
+            etEmail.setText("pankajsunal66@gmail.com".toString())
+            etPassword.setText("Pankaj@123".toString())
+        }
         viewModel.dayDaya.observe(this, Observer {
-
-
         })
-       // mDriverInformation = DriverInformation("city","country","dlBackPic","dlExpiryDate","dlFrontPic","dlNumber")
+        // mDriverInformation = DriverInformation("city","country","dlBackPic","dlExpiryDate","dlFrontPic","dlNumber")
     }
 
     private fun init() {
-        driverInformation = EldDataBaseExicution.invoke(context).getDriverDao()
+        driverInformation = EldDataBaseExicution.invoke(context)?.getDriverDao()
+
+        timeToStartOfTheDay(LocalDateTime.now())
+        timeToStartOfTheDay1(Date())
         setListener()
     }
+
+    fun timeToStartOfTheDay(inDate: LocalDateTime) {
+        //var dateTeimObj = LocalDateTime.now()
+        var utcTime = inDate.atZone(ZoneOffset.UTC);
+        print(utcTime)
+        //Log.i(utcTime)
+    }
+
+    fun timeToStartOfTheDay1(inDate: Date) {
+        println("Date is: $inDate")
+
+        //Getting the default zone id
+
+        //Getting the default zone id
+
+        //Converting the date to Instant
+
+        //Converting the date to Instant
+        val instant: Instant = inDate.toInstant()
+
+        //Converting the Date to LocalDate
+
+        //Converting the Date to LocalDate
+        val localDate: LocalDate = instant.atZone(ZoneOffset.UTC).toLocalDate()
+        println("Local Date is: $localDate")
+
+
+        val test1 = localDate.atStartOfDay(ZoneOffset.UTC)
+        val test2 = localDate.atStartOfDay()
+
+        val totalSecond = test2.second
+
+        ///val time23 = Timestamp(test2.)
+        val date = Date()
+        val ts = Timestamp(date.getTime())
+        val outputTimestamp = startOfDay(ts)
+
+        //var dateTeimObj = LocalDateTime.now()
+        //var utcTime = inDate.atZone(ZoneOffset.UTC);
+        print(inDate)
+        // Log.i(utcTime)
+    }
+
+    fun startOfDay(time: Timestamp): Int {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = time.getTime()
+        cal[Calendar.HOUR_OF_DAY] = 0 //set hours to zero
+        cal[Calendar.MINUTE] = 0 // set minutes to zero
+        cal[Calendar.SECOND] = 0 //set seconds to zero
+        Log.i("Time", cal.time.toString())
+        return cal.timeInMillis.toInt() / 1000
+    }
+
 
     private fun setListener() {
         btnLogin.setOnClickListener(this)
@@ -65,6 +131,9 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
         etEmail.addTextChangedListener(this)
         etPassword.addTextChangedListener(this)
     }
+
+
+
 
     override fun onClick(view: View?) {
 
@@ -90,7 +159,7 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
 
     private fun callLoginApi() {
 
-       progressbar.visibility = View.VISIBLE
+        progressbar.visibility = View.VISIBLE
         if (CommonUtils.isOnline(context)) {
             mUserInfo =
                 LoginRequest(etEmail.text.toString(), etPassword.text.toString())
@@ -102,15 +171,15 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
                     call: Call<LoginResponce?>,
                     response: Response<LoginResponce?>
                 ) {
-                 progressbar.visibility = View.GONE
+                    progressbar.visibility = View.GONE
                     if (response.body() != null) {
                         progressbar.visibility = View.GONE
                         val loginResponce = response.body()
                         profile = loginResponce?.profile!!
                         profile = DriverInformation(zip = profile.zip,lastName = profile.lastName,strAddress1 = profile.strAddress1,FleetDotNuber = profile.FleetDotNuber,dlNumber =  profile.dlNumber,strAddress2 = profile.strAddress2,dlExpiryDate = profile.dlExpiryDate,email = profile.email,country = profile.country,primaryPhone = profile.primaryPhone,firstName = profile.firstName,state = profile.state,city = profile.city,dlBackPic = profile.dlBackPic,dlFrontPiv = profile.dlFrontPiv,secondaryPhone = profile.secondaryPhone,id = profile.id)
                         viewModel.insertDriverInfromation(profile)
-
-                      //  fillingDriverProfile(profile)
+                        //  DataHandler.currentDriver = profile
+                        //  fillingDriverProfile(profile)
                         startActivity(Intent(context,MainActivity::class.java))
                         //saving driver information to the database from server
                     } else {
@@ -131,7 +200,7 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
                     call: Call<LoginResponce?>,
                     t: Throwable
                 ) {
-                  progressbar.visibility = View.GONE
+                    progressbar.visibility = View.GONE
                     call.cancel()
                 }
             })

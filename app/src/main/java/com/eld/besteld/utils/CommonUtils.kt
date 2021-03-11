@@ -16,6 +16,7 @@ import com.eld.besteld.R
  class CommonUtils {
 
     companion object{
+        val DEBUB_MODE = true
 
         val START_TIME = ""
         val STRING_VALUE = ""

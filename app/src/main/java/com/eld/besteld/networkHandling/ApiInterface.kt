@@ -15,5 +15,4 @@ interface ApiInterface {
     @POST("logbook/createLogbook")
     fun createLogbook(@Body dutyDataReq: DutyDataRequest): Call<LoginResponce>
 
-
 }

@@ -7,10 +7,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
-import com.eld.besteld.R
-import java.util.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.eld.besteld.R
 import com.eld.besteld.dialogs.DutyHourDialog
 import com.eld.besteld.dialogs.EldListDialog
 import com.eld.besteld.dialogs.SelectDateDialogFragment
@@ -35,6 +34,8 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.progressbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickListener,
     EldDialogCallBack {
@@ -277,6 +278,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
                 val res = mEldManager!!.ConnectToEld(
                     bleDataCallback,
                     EnumSet.of(
+
                         EldBroadcastTypes.ELD_BUFFER_RECORD,
                         EldBroadcastTypes.ELD_CACHED_RECORD,
                         EldBroadcastTypes.ELD_FUEL_RECORD,

@@ -1,10 +1,14 @@
 package com.eld.besteld.roomDataBase
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-@Entity(tableName = "Inspection")
+
+@Parcelize
+@Entity
 data class Inspection(
 
     @PrimaryKey
@@ -22,4 +26,4 @@ data class Inspection(
 
     @SerializedName("")
     val type: String?=null
-)
+) : Parcelable

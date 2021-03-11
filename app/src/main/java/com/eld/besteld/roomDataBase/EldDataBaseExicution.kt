@@ -9,7 +9,28 @@ import androidx.room.RoomDatabase
 abstract class EldDataBaseExicution : RoomDatabase(){
 
 
-     abstract fun getDriverDao() : insertDriverInformationDao
+    abstract fun getDriverDao() : insertDriverInformationDao
+    abstract fun dayDataDao(): DayDataDao
+    abstract fun dayMetaDataDao(): DayMetaDataDao
+
+/*
+
+    companion object {
+        var INSTANCE: EldDataBaseExicution? = null
+
+        fun getAppDataBase(context: Context): EldDataBaseExicution? {
+            if (INSTANCE == null){
+                synchronized(EldDataBaseExicution::class){
+                    INSTANCE = Room.databaseBuilder(context.applicationContext, EldDataBaseExicution::class.java, "myDB").build()
+                }
+            }
+            return INSTANCE
+        }
+
+        fun destroyDataBase(){
+            INSTANCE = null
+        }
+    }*/
 
     companion object{
 

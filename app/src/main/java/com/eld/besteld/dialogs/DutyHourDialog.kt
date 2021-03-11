@@ -4,37 +4,31 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.aagito.imageradiobutton.RadioImageGroup
 import com.eld.besteld.R
-import com.eld.besteld.activity.MainActivity
 import com.eld.besteld.networkHandling.request.DayDatum
 import com.eld.besteld.networkHandling.request.DutyDataRequest
-import com.eld.besteld.networkHandling.request.Inspection
 import com.eld.besteld.networkHandling.responce.LoginResponce
 import com.eld.besteld.roomDataBase.*
 import com.eld.besteld.utils.CommonUtils
-import com.ethane.choosetobefit.web_services.RetrofitExecuter
 import com.ethane.choosetobefit.web_services.RetrofitExecuter.getApiInterface
 import com.google.android.gms.location.*
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.duty_inspection_layout.*
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -51,17 +45,18 @@ class DutyHourDialog : DialogFragment() {
     private val onDuty = 2131231067
     private val sleeper = 2131231068
     private var startTime = "0.0"
-    private var endTime =""
-    private var temp ="0.0"
+    private var endTime = ""
+    private var temp = "0.0"
     private var startLatitude: Double = 0.0
     private var startLongitude: Double = 0.0
     private var id = ""
     private lateinit var dayData: DayData
-    private lateinit var dayDataGraph : List<DayDatum>
-    private lateinit var inspection : List<Inspection>
+    private lateinit var dayDataGraph: List<DayDatum>
+    private lateinit var inspection: List<Inspection>
     private lateinit var dutyDataRequest: DutyDataRequest
     private var dayDataList: insertDriverInformationDao? = null
     private lateinit var viewModel: DriverViewModel
+    private lateinit var logDataViewModel: LogDataViewModel
 
 
     override fun onCreateView(
@@ -77,6 +72,7 @@ class DutyHourDialog : DialogFragment() {
         setListener()
         settingCallBack(mContext)
         viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
+        logDataViewModel = ViewModelProvider(this).get(LogDataViewModel::class.java)
         dayDataList = EldDataBaseExicution.invoke(mContext).getDriverDao()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext)
     }
@@ -117,7 +113,7 @@ class DutyHourDialog : DialogFragment() {
                 checkedId: Int
             ) {
 
-               // Toast.makeText(mContext,""+checkedId,Toast.LENGTH_LONG).show()
+                // Toast.makeText(mContext,""+checkedId,Toast.LENGTH_LONG).show()
                 if (onDuty == checkedId) {
                     dutyStatus = "ONDUTY"
                 } else if (offDuty == checkedId) {
@@ -139,6 +135,7 @@ class DutyHourDialog : DialogFragment() {
         return startTime
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onClick(view: View) {
         when (view) {
             btnCancel -> dismiss()
@@ -147,15 +144,20 @@ class DutyHourDialog : DialogFragment() {
 
                 startTime = getCurruntTime()
 
-               /* if(endTime!=null)
-                {
-                    endTime = startTime
-                }else{*/
-                    temp = startTime
-                    endTime = temp
-                    startTime = endTime
+                /* if(endTime!=null)
+                 {
+                     endTime = startTime
+                 }else{*/
+                temp = startTime
+                endTime = temp
+                startTime = endTime
 
-              //  }
+                //  }
+                var logDataEndTime = Date()
+                /*if (DataHandler.currentDayData != null) {
+                    //logDataEndTime = logDataEndTime.
+                    //TODO: Update end time for old event
+                }*/
                 dayData = (DayData(
                     id = "233",
                     startLatitude = startLatitude,
@@ -165,17 +167,31 @@ class DutyHourDialog : DialogFragment() {
                     endTime = endTime,
                     autoID = 0,
                     dutyStatus = dutyStatus,
+                    dlNumber = "1231231233",
                     day = day
                 ))
-                viewModel.insertDayData(dayData)
+                //  var currentDriver = DataHandler.currentDriver
+                //   if (currentDriver != null) {
+                logDataViewModel.insertDayDataForDayMetaData(dayData, Date(), "12321321323")
+//                    DataHandler.currentDayData = dayData
+                //   }//insertDayData(dayData)
                 endTime = startTime
 
                 dayDataGraph =
-                    listOf(DayDatum(153,"xyz","ONDUTY","US,NY","US,NY","US,NY","US,NY","US,NY",""))
-
-                inspection = listOf(Inspection("werer","ewre","wer","werwre",true))
+                    listOf(
+                        DayDatum(
+                            153,
+                            "xyz",
+                            "ONDUTY",
+                            "US,NY",
+                            "US,NY",
+                            "US,NY",
+                            "US,NY",
+                            "US,NY",
+                            ""
+                        )
+                    )
                 callLogBookApi()
-                //   listener.onDismissClicked(day, etNotes.text.toString(),dutyStatus,startTime,endTime)
                 dismiss()
             }
             etLocation -> {
@@ -198,50 +214,52 @@ class DutyHourDialog : DialogFragment() {
 
     private fun callLogBookApi() {
 
-            if (CommonUtils.isOnline(mContext)) {
-                dutyDataRequest =DutyDataRequest (1612882460653,dayDataGraph,inspection)
-                var call =
-                    getApiInterface("", "eyJraWQiOiJLOSswR3hadytGYjVMY1VzWVwvUEFraVg0VGNkZmp5UFRiRTFodEpzUG5Lbz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhNTU3OTkyZi03YjAxLTQzY2ItYjg3NC04NjI2M2I4ODA0MjYiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMS5hbWF6b25hd3MuY29tXC91cy13ZXN0LTFfUU1wVHRscHJsIiwiY3VzdG9tOmlkIjoiMjQyMDJmNTAtNzIxOS0xMWViLTg3N2MtNWQ4NWIwMmQyMzkyIiwiY29nbml0bzp1c2VybmFtZSI6ImE1NTc5OTJmLTdiMDEtNDNjYi1iODc0LTg2MjYzYjg4MDQyNiIsImF1ZCI6IjRuM2g2MXU4N2kzdG9sNHE2YTNzb2toYnA0IiwiZXZlbnRfaWQiOiJmODJlNTlmYi1iYjQ2LTQ4ZDktYWM2My0xYzkyZGExODlhNDciLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTYxNTAwNzk1MywiY3VzdG9tOnN0YXR1cyI6ImFjdGl2ZSIsImV4cCI6MTYxNTAxMTU1MywiY3VzdG9tOnJvbGUiOiJkcml2ZXIiLCJpYXQiOjE2MTUwMDc5NTMsImVtYWlsIjoicGFua2Fqc3VuYWw2NkBnbWFpbC5jb20ifQ.BNJRMksx1UWOo3mAj4niIcn9opBHwMNFr23YFrT1hegFJ40McJ9IPMpYRQZwsOn5Pq0qt853bbSpD9I6tM3gXrUI2MU9juSnT0GZSpCuuF-LtSDt7hzLjWZwqCm0ppJnQ0IK7eCeJ9u6P3StrEj2F_nIJTVcc8aER1XFOIUrypX5XAqCGGCXeiC9v6nuyud37ioNkWotqX6PCG5SIGfGqa3OD_xwI91LpYLD4j0vI5ZXLMI2TLM7f9klkLD1kTfYc0BGkI8veg4cy7PVvUNL4pkFxbmbqAXfpkhXRnITqri1QCFUpwbO0UHCEzgAP5tI0YVXBNEwz_fQAWZMZJkudA", "sdf", false).createLogbook(dutyDataReq = dutyDataRequest)
-                Log.e("url", "" + call.request().url)
-                call.enqueue(object : retrofit2.Callback<LoginResponce?> {
-                    override fun onResponse(
-                        call: retrofit2.Call<LoginResponce?>,
-                        response: retrofit2.Response<LoginResponce?>
-                    ) {
-                        if (response.body() != null) {
-                            val loginResponce = response.body()
-
-                            //  fillingDriverProfile(profile)
-                            //saving driver information to the database from server
-                        } else {
-                            val gson = GsonBuilder().create()
-                            try {
-                                val jObjError = JSONObject(response.errorBody()!!.string())
-                                Toast.makeText(
-                                    context,
-                                    jObjError.getString("message").toString(),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            } catch (e: IOException) {
-                            }
+        inspection = listOf(Inspection(12323.4,"Delhi",23434.34,"ertert","ertert"))
+        if (CommonUtils.isOnline(mContext)) {
+            dutyDataRequest = DutyDataRequest(1612882460,1330194600001,1330194600000, dayDataGraph,inspection)
+            var call =
+                getApiInterface(
+                    "",
+                    "eyJraWQiOiJLOSswR3hadytGYjVMY1VzWVwvUEFraVg0VGNkZmp5UFRiRTFodEpzUG5Lbz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhNTU3OTkyZi03YjAxLTQzY2ItYjg3NC04NjI2M2I4ODA0MjYiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMS5hbWF6b25hd3MuY29tXC91cy13ZXN0LTFfUU1wVHRscHJsIiwiY3VzdG9tOmlkIjoiMjQyMDJmNTAtNzIxOS0xMWViLTg3N2MtNWQ4NWIwMmQyMzkyIiwiY29nbml0bzp1c2VybmFtZSI6ImE1NTc5OTJmLTdiMDEtNDNjYi1iODc0LTg2MjYzYjg4MDQyNiIsImF1ZCI6IjRuM2g2MXU4N2kzdG9sNHE2YTNzb2toYnA0IiwiZXZlbnRfaWQiOiJmODJlNTlmYi1iYjQ2LTQ4ZDktYWM2My0xYzkyZGExODlhNDciLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTYxNTAwNzk1MywiY3VzdG9tOnN0YXR1cyI6ImFjdGl2ZSIsImV4cCI6MTYxNTAxMTU1MywiY3VzdG9tOnJvbGUiOiJkcml2ZXIiLCJpYXQiOjE2MTUwMDc5NTMsImVtYWlsIjoicGFua2Fqc3VuYWw2NkBnbWFpbC5jb20ifQ.BNJRMksx1UWOo3mAj4niIcn9opBHwMNFr23YFrT1hegFJ40McJ9IPMpYRQZwsOn5Pq0qt853bbSpD9I6tM3gXrUI2MU9juSnT0GZSpCuuF-LtSDt7hzLjWZwqCm0ppJnQ0IK7eCeJ9u6P3StrEj2F_nIJTVcc8aER1XFOIUrypX5XAqCGGCXeiC9v6nuyud37ioNkWotqX6PCG5SIGfGqa3OD_xwI91LpYLD4j0vI5ZXLMI2TLM7f9klkLD1kTfYc0BGkI8veg4cy7PVvUNL4pkFxbmbqAXfpkhXRnITqri1QCFUpwbO0UHCEzgAP5tI0YVXBNEwz_fQAWZMZJkudA",
+                    "sdf",
+                    false
+                ).createLogbook(dutyDataReq = dutyDataRequest)
+            Log.e("url", "" + call.request().url)
+            call.enqueue(object : retrofit2.Callback<LoginResponce?> {
+                override fun onResponse(
+                    call: retrofit2.Call<LoginResponce?>,
+                    response: retrofit2.Response<LoginResponce?>
+                ) {
+                    if (response.body() != null) {
+                        val loginResponce = response.body()
+                        //  fillingDriverProfile(profile)
+                        //saving driver information to the database from server
+                    } else {
+                        val gson = GsonBuilder().create()
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            Toast.makeText(
+                                context,
+                                jObjError.getString("message").toString(),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } catch (e: IOException) {
                         }
                     }
+                }
 
-                    override fun onFailure(
-                        call: retrofit2.Call<LoginResponce?>,
-                        t: Throwable
-                    ) {
-                        call.cancel()
-                    }
-                })
-            }
-    else {
-                Toast.makeText(context, "Please check internet connection", Toast.LENGTH_LONG)
-            }
-
+                override fun onFailure(
+                    call: retrofit2.Call<LoginResponce?>,
+                    t: Throwable
+                ) {
+                    call.cancel()
+                }
+            })
+        } else {
+            Toast.makeText(context, "Please check internet connection", Toast.LENGTH_LONG)
         }
 
-
+    }
 
 
     private fun checkPermission(): Boolean {
@@ -278,9 +296,8 @@ class DutyHourDialog : DialogFragment() {
 
     private fun getCityName(lat: Double, long: Double): String {
         var geoCoder = Geocoder(mContext, Locale.getDefault())
-        var Adress = geoCoder.getFromLocation(lat, long, 3)
-        return Adress.get(1).getAddressLine(0)
-
+        var Adress = geoCoder.getFromLocation(lat, long, 1)
+        return Adress.get(0).getAddressLine(0)
     }
 
     fun getLastLocation() {
@@ -317,6 +334,7 @@ class DutyHourDialog : DialogFragment() {
         )
         return true
     }
+
     //fuction to allow user permission
     fun NewLocationData() {
         var locationRequest = LocationRequest()
