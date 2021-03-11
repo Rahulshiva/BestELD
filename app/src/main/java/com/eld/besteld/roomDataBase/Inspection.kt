@@ -12,18 +12,13 @@ import kotlinx.android.parcel.Parcelize
 data class Inspection(
 
     @PrimaryKey
-    @SerializedName("")
     val latitude: Double,
 
-    @SerializedName("")
     val location: String?=null,
 
-    @SerializedName("")
     val longitude: Double?=null,
 
-    @SerializedName("")
     val notes: String?=null,
 
-    @SerializedName("")
     val type: String?=null
 ) : Parcelable

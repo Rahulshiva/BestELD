@@ -17,8 +17,6 @@ import com.eld.besteld.R
 
     companion object{
         val DEBUB_MODE = true
-
-        val DEBUB_MODE = true
         val START_TIME = ""
         val STRING_VALUE = ""
         fun isOnline(context: Context): Boolean {

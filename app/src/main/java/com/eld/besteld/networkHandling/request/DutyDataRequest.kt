@@ -1,6 +1,7 @@
 package com.eld.besteld.networkHandling.request
 
 import android.os.Parcelable
+import com.eld.besteld.roomDataBase.Inspection
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
