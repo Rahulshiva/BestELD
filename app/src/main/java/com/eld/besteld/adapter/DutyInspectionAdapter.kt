@@ -31,8 +31,10 @@ class DutyInspectionAdapter(
 
     fun UpdateList(newList: List<DayData>) {
         dayData.clear()
-        dayData.addAll(newList)
-        notifyDataSetChanged()
+        if (newList.count() > 0) {
+            dayData.addAll(newList)
+            notifyDataSetChanged()
+        }
     }
 
     override fun getItemCount(): Int {

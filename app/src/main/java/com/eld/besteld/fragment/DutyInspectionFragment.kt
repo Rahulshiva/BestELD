@@ -11,10 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eld.besteld.R
 import com.eld.besteld.adapter.DutyInspectionAdapter
-import com.eld.besteld.roomDataBase.DayData
-import com.eld.besteld.roomDataBase.DriverViewModel
-import com.eld.besteld.roomDataBase.EldDataBaseExicution
-import com.eld.besteld.roomDataBase.insertDriverInformationDao
+import com.eld.besteld.roomDataBase.*
+import com.eld.besteld.utils.DataHandler
 import kotlinx.android.synthetic.main.fragment_duty_inspection.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +21,7 @@ import kotlinx.coroutines.launch
 class DutyInspectionFragment : Fragment() {
     private lateinit var mContext: Context
     lateinit var viewModel: DriverViewModel
+    lateinit var logDataViewModel: LogDataViewModel
     private var dayData = ArrayList<DayData>()
     private var driverInformation: insertDriverInformationDao? = null
     private lateinit var driverInoAdapter: DutyInspectionAdapter
@@ -35,6 +34,7 @@ class DutyInspectionFragment : Fragment() {
 
         driverInoAdapter = DutyInspectionAdapter(mContext)
         viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
+        logDataViewModel = ViewModelProvider(this).get(LogDataViewModel::class.java)
         viewModel.dayDaya.observe(this, Observer {list
             -> list?.let {
             driverInoAdapter.UpdateList(it)
@@ -43,8 +43,8 @@ class DutyInspectionFragment : Fragment() {
 
 
         })
-        driverInformation = EldDataBaseExicution.invoke(mContext).getDriverDao()
-
+        driverInformation = EldDataBaseExicution.invoke(mContext)?.getDriverDao()
+        //enterInitailEntery()
         //  fillingDriverStatusData()
     }
 
