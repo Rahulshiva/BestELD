@@ -12,6 +12,11 @@ class TimeUtility {
             println("[DEBUG] $debugMessage")
         }
 
+        fun currentDateUTC(): LocalDateTime {
+            var localeTime = LocalDateTime.now(ZoneOffset.UTC);
+            return  localeTime
+        }
+
         fun timeToStartOfTheDay(inDate: LocalDateTime) {
             //var dateTeimObj = LocalDateTime.now()
             var utcTime = inDate.atZone(ZoneOffset.UTC);

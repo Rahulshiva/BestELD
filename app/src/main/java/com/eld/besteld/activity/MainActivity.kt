@@ -16,6 +16,7 @@ import com.eld.besteld.dialogs.SelectDateDialogFragment
 import com.eld.besteld.fragment.DutyInspectionFragment
 import com.eld.besteld.fragment.GraphFragment
 import com.eld.besteld.listener.EldDialogCallBack
+import com.eld.besteld.utils.LocationHandler
 import com.iosix.eldblelib.EldBleConnectionStateChangeCallback
 import com.iosix.eldblelib.EldBleDataCallback
 import com.iosix.eldblelib.EldBleError
@@ -54,10 +55,25 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         context = this
         //Required to allow bluetooth scanning
         checkPermissionble()
+        /* //TODO: Rahul enable this before release
         mEldManager = EldManager.GetEldManager(this, "123456789A")
         runOnUiThread {
         }
+
+         */
         init()
+        //enableLocationServices()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        print("te")
+    }
+
+    private fun enableLocationServices() {
+        if (LocationHandler.RequestPermission()) {
+            LocationHandler.getLastLocation()
+        }
     }
 
     private fun checkPermissionble() {

@@ -24,6 +24,7 @@ import com.eld.besteld.roomDataBase.DriverViewModel
 import com.eld.besteld.roomDataBase.EldDataBaseExicution
 import com.eld.besteld.roomDataBase.insertDriverInformationDao
 import com.eld.besteld.utils.CommonUtils
+import com.eld.besteld.utils.DataHandler
 import com.ethane.choosetobefit.web_services.RetrofitExecuter
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_login.*
@@ -178,7 +179,7 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
                         profile = loginResponce?.profile!!
                         profile = DriverInformation(zip = profile.zip,lastName = profile.lastName,strAddress1 = profile.strAddress1,FleetDotNuber = profile.FleetDotNuber,dlNumber =  profile.dlNumber,strAddress2 = profile.strAddress2,dlExpiryDate = profile.dlExpiryDate,email = profile.email,country = profile.country,primaryPhone = profile.primaryPhone,firstName = profile.firstName,state = profile.state,city = profile.city,dlBackPic = profile.dlBackPic,dlFrontPiv = profile.dlFrontPiv,secondaryPhone = profile.secondaryPhone,id = profile.id)
                         viewModel.insertDriverInfromation(profile)
-                        //  DataHandler.currentDriver = profile
+                         DataHandler.currentDriver = profile
                         //  fillingDriverProfile(profile)
                         startActivity(Intent(context,MainActivity::class.java))
                         //saving driver information to the database from server

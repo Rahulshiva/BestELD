@@ -22,9 +22,9 @@ data class DayData(
 
     val endOdometer: String = "",
 
-    val endTime: String = "",
+    var endTime: String = "",
 
-    val endTimeString: String = "",
+    var endTimeString: String = "",
 
     @PrimaryKey(autoGenerate = true)
     val autoID: Int,
