@@ -16,7 +16,12 @@ import com.eld.besteld.dialogs.SelectDateDialogFragment
 import com.eld.besteld.fragment.DutyInspectionFragment
 import com.eld.besteld.fragment.GraphFragment
 import com.eld.besteld.listener.EldDialogCallBack
+import com.eld.besteld.networkHandling.request.VinRequest
+import com.eld.besteld.networkHandling.responce.VinResponce
+import com.eld.besteld.utils.CommonUtils
 import com.eld.besteld.utils.LocationHandler
+import com.ethane.choosetobefit.web_services.RetrofitExecuter
+import com.google.gson.GsonBuilder
 import com.iosix.eldblelib.EldBleConnectionStateChangeCallback
 import com.iosix.eldblelib.EldBleDataCallback
 import com.iosix.eldblelib.EldBleError
@@ -35,6 +40,11 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.progressbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -48,6 +58,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     var startseq = 0
     var endseq = 0
     var reccount = 0
+    private lateinit var vinRequest: VinRequest
+
     private val eldDeviceList = mutableListOf<EldScanObject>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,6 +128,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         ivDuty.setOnClickListener(this)
         ivUserPic.setOnClickListener(this)
         ivDown.setOnClickListener(this)
+
+        //Calling eld profile api
+        callEldProfileDataApi("1FTLR4FEXBPA98994")
+
     }
 
     override fun onBackPressed() {
@@ -401,5 +417,50 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
   fun callDriverStatusActivity(){
       startActivity(Intent(context,DriverStatusActivity::class.java))
   }
+    fun callEldProfileDataApi(vinNumber : String ){
+
+
+        if (CommonUtils.isOnline(context)) {
+            vinRequest = VinRequest(vinNumber)
+            var call =
+                RetrofitExecuter.getApiInterface("", "", "sdf", false).getEldProfile(vinRequest)
+            Log.e("url", "" + call.request().url)
+            call.enqueue(object : Callback<VinResponce?> {
+                override fun onResponse(
+                    call: Call<VinResponce?>,
+                    response: Response<VinResponce?>
+                ) {
+                    progressbar.visibility = View.GONE
+                    if (response.body() != null) {
+
+                        //saving driver information to the database from server
+                    } else {
+                        val gson = GsonBuilder().create()
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            Toast.makeText(
+                                context,
+                                jObjError.getString("message").toString(),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } catch (e: IOException) {
+                        }
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<VinResponce?>,
+                    t: Throwable
+                ) {
+                    progressbar.visibility = View.GONE
+                    call.cancel()
+                }
+            })
+        } else {
+            Toast.makeText(context, "Please check internet connection", Toast.LENGTH_LONG)
+        }
+
+
+    }
 
 }

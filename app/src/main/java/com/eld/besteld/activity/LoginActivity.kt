@@ -3,14 +3,12 @@ package com.eld.besteld.activity
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +16,8 @@ import com.eld.besteld.R
 import com.eld.besteld.dialogs.CommonDialogs
 import com.eld.besteld.listener.DialogCallback
 import com.eld.besteld.networkHandling.request.LoginRequest
+import com.eld.besteld.networkHandling.request.VinRequest
+import com.eld.besteld.networkHandling.responce.VinResponce
 import com.eld.besteld.networkHandling.responce.LoginResponce
 import com.eld.besteld.roomDataBase.DriverInformation
 import com.eld.besteld.roomDataBase.DriverViewModel
@@ -288,4 +288,6 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
             }
         }
     }
+
+
 }
