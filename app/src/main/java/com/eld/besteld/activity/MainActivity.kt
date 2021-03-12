@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         super.onCreate(savedInstanceState)
         context = this
         //Required to allow bluetooth scanning
+        //fetch location here
         checkPermissionble()
         mEldManager = EldManager.GetEldManager(this, "123456789A")
         runOnUiThread {
@@ -134,6 +135,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
                     startseq = dataRec.startSeqNo
                     endseq = dataRec.endSeqNo
                 } else if (RecordType == EldBroadcastTypes.ELD_DATA_RECORD) {
+                    callDriverStatusActivity()
+
                 } else if (RecordType == EldBroadcastTypes.ELD_CACHED_RECORD) {
                     if (reqdelinprogress) {
                         reccount++
@@ -379,6 +382,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     }
 
 
-
+  fun callDriverStatusActivity(){
+      startActivity(Intent(context,DriverStatusActivity::class.java))
+  }
 
 }
