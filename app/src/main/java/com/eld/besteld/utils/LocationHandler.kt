@@ -26,6 +26,15 @@ internal object LocationHandler {
         println("Singleton class invoked.")
     }
 
+    fun locationLatitude(): Double {
+        return lastLocation.latitude
+    }
+
+    fun locationLongitude(): Double {
+        return  lastLocation.longitude
+    }
+
+
     private fun checkPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
             mContext,

@@ -1,10 +1,7 @@
 package com.eld.besteld.roomDataBase
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface DayDataDao {
@@ -14,4 +11,6 @@ interface DayDataDao {
     @Query("select * from DayData")
     fun getDayData(): LiveData<List<DayData>>
 
+    @Update
+    fun updateDayData(dayData:DayData)
 }

@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.eld.besteld.R
 import com.eld.besteld.roomDataBase.DayData
+import com.eld.besteld.utils.CommonUtils
+import com.eld.besteld.utils.TimeUtility
 import kotlinx.android.synthetic.main.driver_information_recycler_layout.view.*
-import kotlinx.android.synthetic.main.duty_inspection_layout.view.*
-import kotlinx.android.synthetic.main.duty_inspection_layout.view.tvStartTime
 import kotlinx.android.synthetic.main.odometer_reading_row_layout.view.*
 
 class DutyInspectionAdapter(
@@ -45,8 +45,12 @@ class DutyInspectionAdapter(
 
         holder.itemView.tvNotes.text = dayData.get(position).rideDesciption
         holder.itemView.tvLocation.text = dayData.get(position).day
-        holder.itemView.tvstarttime_?.text = dayData.get(position).startTime
-        holder.itemView.tvEndtime_?.text = dayData.get(position).endTime
+        if (CommonUtils.DEBUB_MODE == true) {
+            holder.itemView.tvstarttime_?.text = TimeUtility.timeForDateString(dayData.get(position).startTime)//dayData.get(position).startTime
+            holder.itemView.tvEndtime_?.text = TimeUtility.timeForDateString(dayData.get(position).endTime)//dayData.get(position).endTime
+        }else {
+            holder.itemView.tvstarttime_?.text = TimeUtility.timeForDateString(dayData.get(position).startTime)
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

@@ -25,6 +25,9 @@ import com.eld.besteld.networkHandling.request.DutyDataRequest
 import com.eld.besteld.networkHandling.responce.LoginResponce
 import com.eld.besteld.roomDataBase.*
 import com.eld.besteld.utils.CommonUtils
+import com.eld.besteld.utils.DataHandler
+import com.eld.besteld.utils.DutyStatus
+import com.eld.besteld.utils.TimeUtility
 import com.ethane.choosetobefit.web_services.RetrofitExecuter.getApiInterface
 import com.google.android.gms.location.*
 import com.google.gson.GsonBuilder
@@ -38,7 +41,7 @@ class DutyHourDialog : DialogFragment() {
 
     private lateinit var mContext: Context
     private var day = ""
-    private var dutyStatus = ""
+    private var dutyStatus: DutyStatus = DutyStatus.OFFDUTY
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var PERMISSION_ID = 1000
     private val offDuty = 2131231066
@@ -115,24 +118,15 @@ class DutyHourDialog : DialogFragment() {
 
                 // Toast.makeText(mContext,""+checkedId,Toast.LENGTH_LONG).show()
                 if (onDuty == checkedId) {
-                    dutyStatus = "ONDUTY"
+                    dutyStatus = DutyStatus.ONDUTY
                 } else if (offDuty == checkedId) {
-                    dutyStatus = "OFFDUTY"
+                    dutyStatus = DutyStatus.OFFDUTY
                 } else if (sleeper == checkedId) {
-                    dutyStatus = "SLEEPER"
+                    dutyStatus = DutyStatus.SLEEPER
                 }
             }
 
         })
-    }
-
-    private fun getCurruntTime(): String {
-        //  val sdf = SimpleDateFormat("yyyy.MM.dd hh:mm:ss")
-        val sdf = SimpleDateFormat("hh:mm")
-        val currentDate = sdf.format(Date())
-
-        startTime = currentDate
-        return startTime
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -141,65 +135,11 @@ class DutyHourDialog : DialogFragment() {
             btnCancel -> dismiss()
             //  btnConfirm -> listener.onButtonConfirm(rbEnableYardMode.id,et)
             btnConfirm -> {
-
-                startTime = getCurruntTime()
-
-                /* if(endTime!=null)
-                 {
-                     endTime = startTime
-                 }else{*/
-                temp = startTime
-                endTime = temp
-                startTime = endTime
-
-                //  }
-                var logDataEndTime = Date()
-                /*if (DataHandler.currentDayData != null) {
-                    //logDataEndTime = logDataEndTime.
-                    //TODO: Update end time for old event
-                }*/
-                dayData = (DayData(
-                    id = "233",
-                    startLatitude = startLatitude,
-                    startLongitude = startLongitude,
-                    rideDesciption = etNotes.text.toString(),
-                    startTime = startTime,
-                    endTime = endTime,
-                    autoID = 0,
-                    dutyStatus = dutyStatus,
-                    dlNumber = "1231231233",
-                    day = day
-                ))
-                //  var currentDriver = DataHandler.currentDriver
-                //   if (currentDriver != null) {
-                logDataViewModel.insertDayDataForDayMetaData(dayData, Date(), "12321321323")
-//                    DataHandler.currentDayData = dayData
-                //   }//insertDayData(dayData)
-                endTime = startTime
-
-                dayDataGraph =
-                    listOf(
-                        DayDatum(
-                            153,
-                            "xyz",
-                            "ONDUTY",
-                            "US,NY",
-                            "US,NY",
-                            "US,NY",
-                            "US,NY",
-                            "US,NY",
-                            ""
-                        )
-                    )
-                callLogBookApi()
+                DataHandler.logDataViewModel = logDataViewModel
+                DataHandler.dutyStatusChanged(dutyStatus, etNotes.text.toString(), TimeUtility.currentDateUTC())
                 dismiss()
             }
             etLocation -> {
-
-                if (RequestPermission()) {
-
-                    getLastLocation()
-                }
             }
             rbOffDuty -> {
             }
@@ -214,9 +154,10 @@ class DutyHourDialog : DialogFragment() {
 
     private fun callLogBookApi() {
 
-        inspection = listOf(Inspection(12323.4,"Delhi",23434.34,"ertert","ertert"))
+        inspection = listOf(Inspection(12323.4, "Delhi", 23434.34, "ertert", "ertert"))
         if (CommonUtils.isOnline(mContext)) {
-            dutyDataRequest = DutyDataRequest(1612882460,1330194600001,1330194600000, dayDataGraph,inspection)
+            dutyDataRequest =
+                DutyDataRequest(1612882460, 1330194600001, 1330194600000, dayDataGraph, inspection)
             var call =
                 getApiInterface(
                     "",
@@ -260,8 +201,9 @@ class DutyHourDialog : DialogFragment() {
         }
 
     }
+}
 
-
+/*
     private fun checkPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
             mContext,
@@ -300,26 +242,6 @@ class DutyHourDialog : DialogFragment() {
         return Adress.get(0).getAddressLine(0)
     }
 
-    fun getLastLocation() {
-        if (checkPermission()) {
-            if (isLocationEnabled()) {
-                fusedLocationProviderClient.lastLocation.addOnCompleteListener { task ->
-                    var location: Location? = task.result
-                    if (location == null) {
-                        NewLocationData()
-                    } else {
-                        day = getCityName(location.latitude, location.longitude)
-                        etLocation.text = day
-                    }
-                }
-            } else {
-                Toast.makeText(mContext, "Please Turn on Your device Location", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        } else {
-            RequestPermission()
-        }
-    }
 
 
     fun RequestPermission(): Boolean {
@@ -368,7 +290,7 @@ class DutyHourDialog : DialogFragment() {
             etLocation.text = "" + getCityName(lastLocation.latitude, lastLocation.longitude)
         }
     }
-}
+}*/
 
 
 

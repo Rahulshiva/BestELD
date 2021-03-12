@@ -9,6 +9,10 @@ class LogDataRepository(private val dayDataDao: DayDataDao, private val dayMetaD
         dayDataDao.insertDayData(dayData)
     }
 
+    fun updateDayData(dayData:DayData) {
+        dayDataDao.updateDayData(dayData)
+    }
+
     fun insertDayMetaData(metaData: DayMetaData) {
         dayMetaDataDao.insertDayMetaData(metaData)
     }
