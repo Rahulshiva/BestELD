@@ -18,7 +18,8 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
 
     init{
         val dao = EldDataBaseExicution.invoke(application)?.getDriverDao()
-        noteReposetry = DriverReposetry(dao!!)
+        val eldDao = EldDataBaseExicution.invoke(application)?.getEldProfileDao()
+        noteReposetry = DriverReposetry(dao,eldDao)
         dayDaya = noteReposetry.allInfromation
     }
 
@@ -32,4 +33,10 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
     fun insertDriverInfromation(driverInformation: DriverInformation) = viewModelScope.launch (Dispatchers.IO){
         noteReposetry.insertDriverIno(driverInformation)
     }
+
+    fun insertEldProfileInformation(eld:Eld) = viewModelScope.launch (Dispatchers.IO ){
+
+        noteReposetry.insertEldProfile(eld)
+    }
+
 }

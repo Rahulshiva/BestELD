@@ -7,12 +7,10 @@ import androidx.room.RoomDatabase
 @Database (entities = [DayData::class, DayMetaData::class, DriverInformation::class, Eld::class, Inspection::class], version = 1 ,exportSchema = false)
 
 abstract class EldDataBaseExicution : RoomDatabase(){
-
-
     abstract fun getDriverDao() : insertDriverInformationDao
     abstract fun dayDataDao(): DayDataDao
     abstract fun dayMetaDataDao(): DayMetaDataDao
-
+    abstract fun getEldProfileDao() :  EldProfileDao
 /*
 
     companion object {

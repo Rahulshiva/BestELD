@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.eld.besteld.R
 import com.eld.besteld.dialogs.DutyHourDialog
 import com.eld.besteld.dialogs.EldListDialog
@@ -17,7 +18,10 @@ import com.eld.besteld.fragment.DutyInspectionFragment
 import com.eld.besteld.fragment.GraphFragment
 import com.eld.besteld.listener.EldDialogCallBack
 import com.eld.besteld.networkHandling.request.VinRequest
+import com.eld.besteld.networkHandling.responce.Data
 import com.eld.besteld.networkHandling.responce.VinResponce
+import com.eld.besteld.roomDataBase.DriverViewModel
+import com.eld.besteld.roomDataBase.Eld
 import com.eld.besteld.utils.CommonUtils
 import com.eld.besteld.utils.LocationHandler
 import com.ethane.choosetobefit.web_services.RetrofitExecuter
@@ -58,7 +62,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     var startseq = 0
     var endseq = 0
     var reccount = 0
+     lateinit var eldProfile: Eld
     private lateinit var vinRequest: VinRequest
+    lateinit var data : Data
+    lateinit var viewModel: DriverViewModel
 
     private val eldDeviceList = mutableListOf<EldScanObject>()
 
@@ -68,6 +75,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         //Required to allow bluetooth scanning
         //fetch location here
         checkPermissionble()
+        viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
         /* //TODO: Rahul enable this before release
         mEldManager = EldManager.GetEldManager(this, "123456789A")
         runOnUiThread {
@@ -392,7 +400,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
             }
 
             R.id.ivUserPic -> {
-
+                callEldProfileDataApi("1FTLR4FEXBPA98994")
             }
 
             R.id.ivDown ->{
@@ -432,6 +440,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
                 ) {
                     progressbar.visibility = View.GONE
                     if (response.body() != null) {
+
+                        data = response.body()?.data!!
+                        eldProfile = Eld(eldId = data.id.toString(), fleetDotNumber = data.fleetDOTNumber.toString(), macAddress = data.vin.toString(), remarks = data.carrierName, status = "hello")
+                        viewModel.insertEldProfileInformation(eldProfile)
 
                         //saving driver information to the database from server
                     } else {

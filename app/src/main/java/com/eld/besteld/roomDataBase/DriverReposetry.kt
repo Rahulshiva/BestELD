@@ -9,7 +9,7 @@ import java.time.LocalTime
 import java.util.*
 
 
-class DriverReposetry(private val driverDao: insertDriverInformationDao) {
+class DriverReposetry(private val driverDao: insertDriverInformationDao, private val eldProfileDao: EldProfileDao) {
 
     val allInfromation: LiveData<List<DayData>> = driverDao.getDayData()
 
@@ -19,6 +19,10 @@ class DriverReposetry(private val driverDao: insertDriverInformationDao) {
 
     fun insertDriverIno(driverInformation:DriverInformation) {
         driverDao.insertDriverInformation(driverInformation)
+    }
+
+    fun insertEldProfile(eld: Eld){
+        eldProfileDao.insertEldInfromation(eld)
     }
 
     //TODO: Add a method to save day data
