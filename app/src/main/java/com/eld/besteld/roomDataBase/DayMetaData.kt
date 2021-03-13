@@ -9,19 +9,17 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "DayMetaData")
 data class DayMetaData(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
+    val id_DayMetaData: Long,
+
     @SerializedName("day")
-    val day: String,
+    val day_meta: String,
 
-    @SerializedName("id")
-    val id: String?=null,
+    val id: String,
 
-    @SerializedName("driverId")
     val driverId: String,
 
-    @SerializedName("dlNumber")
     val dlNumber: String
-
 //    val dayDataArray: DayData? = null,
 
 //    val inspectionArray: Inspection? = null

@@ -22,8 +22,12 @@ import com.eld.besteld.networkHandling.responce.Data
 import com.eld.besteld.networkHandling.responce.VinResponce
 import com.eld.besteld.roomDataBase.DriverViewModel
 import com.eld.besteld.roomDataBase.Eld
+import com.eld.besteld.roomDataBase.DayMetaData
+import com.eld.besteld.roomDataBase.LogDataViewModel
 import com.eld.besteld.utils.CommonUtils
+import com.eld.besteld.utils.DataHandler
 import com.eld.besteld.utils.LocationHandler
+import com.eld.besteld.utils.TimeUtility
 import com.ethane.choosetobefit.web_services.RetrofitExecuter
 import com.google.gson.GsonBuilder
 import com.iosix.eldblelib.EldBleConnectionStateChangeCallback
@@ -40,7 +44,6 @@ import com.iosix.eldblelib.EldDriverBehaviorRecord
 import com.iosix.eldblelib.EldFuelRecord
 import com.iosix.eldblelib.EldManager
 import com.iosix.eldblelib.EldScanObject
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.progressbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     private lateinit var vinRequest: VinRequest
     lateinit var data : Data
     lateinit var viewModel: DriverViewModel
-
+    private lateinit var logDataViewModel: LogDataViewModel
     private val eldDeviceList = mutableListOf<EldScanObject>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +86,21 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
 
          */
         init()
-        //enableLocationServices()
+        prepareDatabase()
+        //enableLocationServices() //TODO: Enable this before Release
+    }
+
+
+    fun prepareDatabase() {
+        logDataViewModel = ViewModelProvider(this).get(LogDataViewModel::class.java)
+        var metaDataList = logDataViewModel.getMetaDataList()
+//        if (metaDataList == null) {
+            var currentTimeObj = TimeUtility.currentDateUTC().toString()
+            var curretnDriverDlNumber = DataHandler.currentDriver.dlNumber
+            var metaDataObj = DayMetaData(0,currentTimeObj,"234","xyz",curretnDriverDlNumber)
+        //(0,"xyz123","zysw",currentDriverObj)
+            logDataViewModel.insertDayMetaData(metaDataObj)
+//        }
     }
 
     override fun onResume() {

@@ -47,12 +47,6 @@ class DutyHourDialog : DialogFragment() {
     private val offDuty = 2131231066
     private val onDuty = 2131231067
     private val sleeper = 2131231068
-    private var startTime = "0.0"
-    private var endTime = ""
-    private var temp = "0.0"
-    private var startLatitude: Double = 0.0
-    private var startLongitude: Double = 0.0
-    private var id = ""
     private lateinit var dayData: DayData
     private lateinit var dayDataGraph: List<DayDatum>
     private lateinit var inspection: List<Inspection>

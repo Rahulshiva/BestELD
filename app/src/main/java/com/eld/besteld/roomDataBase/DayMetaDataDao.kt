@@ -14,8 +14,12 @@ interface  DayMetaDataDao {
     @Query("SELECT * FROM DayMetaData")
     fun getUsersWithPlaylists(): List<DayMetaDataWithDayDataList>
 
+    @Transaction
+    //@Query("SELECT * FROM DayMetaData where day = :inDay")
+    @Query("SELECT * FROM DayMetaData where id_DayMetaData = :dayTimeInterval")
+    fun getCurrentDayMetaData(dayTimeInterval: Long): List<DayMetaDataWithDayDataList>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDayMetaData(metaDta: DayMetaData)
-
 
 }

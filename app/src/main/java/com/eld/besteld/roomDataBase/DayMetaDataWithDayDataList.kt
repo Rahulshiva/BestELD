@@ -7,7 +7,7 @@ data class DayMetaDataWithDayDataList (
     @Embedded
     val user: DayMetaData,
     @Relation(
-        parentColumn = "day",
+        parentColumn = "id_DayMetaData",
         entityColumn = "day"
     )
     val dayDataList: List<DayData>

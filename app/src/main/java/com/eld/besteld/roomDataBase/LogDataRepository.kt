@@ -16,4 +16,8 @@ class LogDataRepository(private val dayDataDao: DayDataDao, private val dayMetaD
     fun insertDayMetaData(metaData: DayMetaData) {
         dayMetaDataDao.insertDayMetaData(metaData)
     }
+
+    fun getMetaDataList() {
+        dayMetaDataDao.getUsersWithPlaylists()
+    }
 }

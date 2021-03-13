@@ -8,7 +8,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity
 data class DayData(
-    var day: String = "",
+
+    var day: Long = 0,
 
     val dlNumber: String = "",
 
@@ -27,9 +28,8 @@ data class DayData(
     var endTimeString: String = "",
 
     //val autoID: String,
-
-    @PrimaryKey
-    val id: String,
+    @PrimaryKey(autoGenerate = true)
+    val id_DayData: Long,
 
     val isVoilation: Boolean? = false,
 

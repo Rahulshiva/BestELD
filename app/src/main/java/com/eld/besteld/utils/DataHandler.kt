@@ -31,15 +31,15 @@ internal object DataHandler {
         val startLatitude = 12312321.777// LocationHandler.locationLatitude()
         var startLongitude = 777777.777//LocationHandler.locationLongitude()
         //var cityName = LocationHandler.cityName()
-        var dayDataObj = DayData(id = TimeUtility.currentDateUTC().toString(),
+        var dayDataObj = DayData(id_DayData = 0,//TimeUtility.currentDateUTC().toString(),
             startLatitude = startLatitude,
             startLongitude = startLongitude,
             rideDesciption = desciption ?: "",
             startTime = start.toString(),
             endTime = end.toString(),
             dutyStatus = status.rawValue,
-            dlNumber = driver.dlNumber ?:  "1231231233",
-            day = "day"
+            dlNumber = driver.dlNumber ?:  TEST_DRIVER_DL_NUMBER,
+            day = TimeUtility.getCurrentDateTimeInterval()
         )
 
         return dayDataObj

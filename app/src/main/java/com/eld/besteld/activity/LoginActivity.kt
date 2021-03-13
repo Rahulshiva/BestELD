@@ -25,6 +25,7 @@ import com.eld.besteld.roomDataBase.EldDataBaseExicution
 import com.eld.besteld.roomDataBase.insertDriverInformationDao
 import com.eld.besteld.utils.CommonUtils
 import com.eld.besteld.utils.DataHandler
+import com.eld.besteld.utils.TimeUtility
 import com.ethane.choosetobefit.web_services.RetrofitExecuter
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_login.*
@@ -62,6 +63,10 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login), View.OnClickLi
         }
         viewModel.dayDaya.observe(this, Observer {
         })
+
+        var curretTime = TimeUtility.currentDateUTC()
+        var abc = TimeUtility.getTimeIntervalForStartOfTheDay(curretTime)
+        print("tet")
         // mDriverInformation = DriverInformation("city","country","dlBackPic","dlExpiryDate","dlFrontPic","dlNumber")
     }
 

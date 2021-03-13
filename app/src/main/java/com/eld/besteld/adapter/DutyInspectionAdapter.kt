@@ -44,7 +44,7 @@ class DutyInspectionAdapter(
     override fun onBindViewHolder(holder: DutyInspectionAdapter.ViewHolder, position: Int) {
 
         holder.itemView.tvNotes.text = dayData.get(position).rideDesciption
-        holder.itemView.tvLocation.text = dayData.get(position).day
+        holder.itemView.tvLocation.text = "Invalid Location"// dayData.get(position).day
         if (CommonUtils.DEBUB_MODE == true) {
             holder.itemView.tvstarttime_?.text = TimeUtility.timeForDateString(dayData.get(position).startTime)//dayData.get(position).startTime
             holder.itemView.tvEndtime_?.text = TimeUtility.timeForDateString(dayData.get(position).endTime)//dayData.get(position).endTime
