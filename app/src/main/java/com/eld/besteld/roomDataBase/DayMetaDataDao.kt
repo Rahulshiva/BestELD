@@ -16,10 +16,13 @@ interface  DayMetaDataDao {
 
     @Transaction
     //@Query("SELECT * FROM DayMetaData where day = :inDay")
-    @Query("SELECT * FROM DayMetaData where id_DayMetaData = :dayTimeInterval")
+    @Query("SELECT * FROM DayMetaData where day_meta = :dayTimeInterval")
     fun getCurrentDayMetaData(dayTimeInterval: Long): List<DayMetaDataWithDayDataList>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDayMetaData(metaDta: DayMetaData)
+
+    @Query("select * from DayMetaData where day_meta = :dayTimeInterval AND dlNumber = :dlNumber")
+    fun getDayMetaDataForDay(dayTimeInterval: Long, dlNumber: String): List<DayMetaData>
 
 }

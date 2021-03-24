@@ -69,8 +69,6 @@ internal object DataHandler {
         }
     }
 
-
-
     fun performDutyStatusChanged(description: String?, startTime: LocalDateTime? = null, dutyStatus: DutyStatus) {
 //        if (currentDayData == null) {
 //            return //Invalid data
@@ -94,6 +92,9 @@ internal object DataHandler {
     }
          */
     }
+
+
+
 
 
     fun performOffDutyStatusChanged(description: String?, startTime: Date? = null) {

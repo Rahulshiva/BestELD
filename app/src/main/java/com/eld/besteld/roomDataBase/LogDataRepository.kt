@@ -20,4 +20,8 @@ class LogDataRepository(private val dayDataDao: DayDataDao, private val dayMetaD
     fun getMetaDataList() {
         dayMetaDataDao.getUsersWithPlaylists()
     }
+
+    fun getMetaData(dlNumber: String, day: Long) {
+        dayMetaDataDao.getDayMetaDataForDay(day,dlNumber)
+    }
 }

@@ -93,14 +93,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
 
     fun prepareDatabase() {
         logDataViewModel = ViewModelProvider(this).get(LogDataViewModel::class.java)
-        var metaDataList = logDataViewModel.getMetaDataList()
-//        if (metaDataList == null) {
-            var currentTimeObj = TimeUtility.currentDateUTC().toString()
-            var curretnDriverDlNumber = DataHandler.currentDriver.dlNumber
-            var metaDataObj = DayMetaData(0,currentTimeObj,"234","xyz",curretnDriverDlNumber)
-        //(0,"xyz123","zysw",currentDriverObj)
+        var curretnDriverDlNumber = DataHandler.currentDriver.dlNumber
+        var currentTimeInterval = TimeUtility.getCurrentDateTimeInterval()
+        var metaDataList = logDataViewModel.getMetaData(curretnDriverDlNumber, currentTimeInterval)
+        if (listOf(metaDataList).size > 0) {
+            var metaDataObj = DayMetaData(0,currentTimeInterval,"234","xyz",curretnDriverDlNumber)
             logDataViewModel.insertDayMetaData(metaDataObj)
-//        }
+        }
     }
 
     override fun onResume() {

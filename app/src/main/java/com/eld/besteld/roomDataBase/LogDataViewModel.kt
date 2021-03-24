@@ -33,6 +33,10 @@ class LogDataViewModel(application: Application) : AndroidViewModel(application)
         logReposetry.getMetaDataList()
     }
 
+    fun getMetaData(driverLicense: String, day: Long)=viewModelScope.launch (Dispatchers.IO){
+        logReposetry.getMetaData(driverLicense,day)
+    }
+
 /*    fun insertDayMetaData(metaData: DayMetaData) {
         logReposetry.insertDayMetaData(metaData)
     }*/

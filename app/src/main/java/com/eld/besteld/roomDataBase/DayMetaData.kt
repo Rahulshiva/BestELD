@@ -13,7 +13,7 @@ data class DayMetaData(
     val id_DayMetaData: Long,
 
     @SerializedName("day")
-    val day_meta: String,
+    val day_meta: Long,
 
     val id: String,
 
