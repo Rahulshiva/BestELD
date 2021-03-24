@@ -30,7 +30,6 @@ internal object DataHandler {
     fun createDayData(start: LocalDateTime, end: LocalDateTime, status: DutyStatus, desciption: String?, driver: DriverInformation): DayData {
         val startLatitude = 12312321.777// LocationHandler.locationLatitude()
         var startLongitude = 777777.777//LocationHandler.locationLongitude()
-        //var cityName = LocationHandler.cityName()
         var dayDataObj = DayData(id_DayData = 0,//TimeUtility.currentDateUTC().toString(),
             startLatitude = startLatitude,
             startLongitude = startLongitude,
