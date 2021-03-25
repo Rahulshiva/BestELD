@@ -20,10 +20,7 @@ import com.eld.besteld.listener.EldDialogCallBack
 import com.eld.besteld.networkHandling.request.VinRequest
 import com.eld.besteld.networkHandling.responce.Data
 import com.eld.besteld.networkHandling.responce.VinResponce
-import com.eld.besteld.roomDataBase.DriverViewModel
-import com.eld.besteld.roomDataBase.Eld
-import com.eld.besteld.roomDataBase.DayMetaData
-import com.eld.besteld.roomDataBase.LogDataViewModel
+import com.eld.besteld.roomDataBase.*
 import com.eld.besteld.utils.CommonUtils
 import com.eld.besteld.utils.DataHandler
 import com.eld.besteld.utils.LocationHandler
@@ -47,6 +44,9 @@ import com.iosix.eldblelib.EldScanObject
 import kotlinx.android.synthetic.main.activity_login.progressbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -71,6 +71,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     lateinit var viewModel: DriverViewModel
     private lateinit var logDataViewModel: LogDataViewModel
     private val eldDeviceList = mutableListOf<EldScanObject>()
+    private lateinit var dayDataList: MutableList<DayMetaData>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +80,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         //Required to allow bluetooth scanning
         //fetch location here
         checkPermissionble()
+        dayDataList = mutableListOf()
         viewModel = ViewModelProvider(this).get(DriverViewModel::class.java)
         /* //TODO: Rahul enable this before release
         mEldManager = EldManager.GetEldManager(this, "123456789A")
@@ -85,9 +88,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         }
 
          */
+
         init()
         prepareDatabase()
         //enableLocationServices() //TODO: Enable this before Release
+
+        var size = dayDataList.size
+        size++
     }
 
 
@@ -95,8 +102,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         logDataViewModel = ViewModelProvider(this).get(LogDataViewModel::class.java)
         var curretnDriverDlNumber = DataHandler.currentDriver.dlNumber
         var currentTimeInterval = TimeUtility.getCurrentDateTimeInterval()
-        var metaDataList = logDataViewModel.getMetaData(curretnDriverDlNumber, currentTimeInterval)
-        if (listOf(metaDataList).size > 0) {
+        CoroutineScope(Dispatchers.IO).launch {
+             dayDataList = logDataViewModel.getMetaData(curretnDriverDlNumber, currentTimeInterval)
+        }
+        if (listOf(dayDataList).size > 0) {
             var metaDataObj = DayMetaData(0,currentTimeInterval,"234","xyz",curretnDriverDlNumber)
             logDataViewModel.insertDayMetaData(metaDataObj)
         }

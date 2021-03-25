@@ -22,7 +22,14 @@ interface  DayMetaDataDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDayMetaData(metaDta: DayMetaData)
 
+    @Transaction
     @Query("select * from DayMetaData where day_meta = :dayTimeInterval AND dlNumber = :dlNumber")
-    fun getDayMetaDataForDay(dayTimeInterval: Long, dlNumber: String): List<DayMetaData>
+    fun getDayMetaDataForDay(dayTimeInterval: Long, dlNumber: String): MutableList<DayMetaData>
+
+
+    @Transaction
+    @Query("select * from DayData where day = :day and dlNumber = :dl")
+    fun getDayandId(day: String, dl: String): MutableList<DayData>
+
 
 }

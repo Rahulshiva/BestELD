@@ -31,8 +31,6 @@
         android:theme="@style/Theme.BestELD"
         android:usesCleartextTraffic="true">
         <activity android:name=".activity.GraphDrawActivity"></activity>
-        <activity android:name=".activity.GraphActivity" />
-        <activity android:name=".activity.AssordtedShapeView" />
         <activity android:name=".activity.BleConnect" />
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.LoginActivity">
