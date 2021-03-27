@@ -20,27 +20,18 @@ import com.eld.besteld.listener.EldDialogCallBack
 import com.eld.besteld.networkHandling.request.VinRequest
 import com.eld.besteld.networkHandling.responce.Data
 import com.eld.besteld.networkHandling.responce.VinResponce
-import com.eld.besteld.roomDataBase.*
+import com.eld.besteld.roomDataBase.DayMetaData
+import com.eld.besteld.roomDataBase.DriverViewModel
+import com.eld.besteld.roomDataBase.Eld
+import com.eld.besteld.roomDataBase.LogDataViewModel
 import com.eld.besteld.utils.CommonUtils
 import com.eld.besteld.utils.DataHandler
+import com.eld.besteld.utils.DutyStatus
 import com.eld.besteld.utils.LocationHandler
 import com.eld.besteld.utils.TimeUtility
 import com.ethane.choosetobefit.web_services.RetrofitExecuter
 import com.google.gson.GsonBuilder
-import com.iosix.eldblelib.EldBleConnectionStateChangeCallback
-import com.iosix.eldblelib.EldBleDataCallback
-import com.iosix.eldblelib.EldBleError
-import com.iosix.eldblelib.EldBleScanCallback
-import com.iosix.eldblelib.EldBroadcast
-import com.iosix.eldblelib.EldBroadcastTypes
-import com.iosix.eldblelib.EldBufferRecord
-import com.iosix.eldblelib.EldCachedNewTimeRecord
-import com.iosix.eldblelib.EldCachedNewVinRecord
-import com.iosix.eldblelib.EldCachedPeriodicRecord
-import com.iosix.eldblelib.EldDriverBehaviorRecord
-import com.iosix.eldblelib.EldFuelRecord
-import com.iosix.eldblelib.EldManager
-import com.iosix.eldblelib.EldScanObject
+import com.iosix.eldblelib.*
 import kotlinx.android.synthetic.main.activity_login.progressbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
@@ -52,8 +43,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickListener,
     EldDialogCallBack {
@@ -92,9 +84,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         init()
         prepareDatabase()
         //enableLocationServices() //TODO: Enable this before Release
-
-        var size = dayDataList.size
-        size++
     }
 
 
@@ -105,9 +94,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
         CoroutineScope(Dispatchers.IO).launch {
              dayDataList = logDataViewModel.getMetaData(curretnDriverDlNumber, currentTimeInterval)
         }
-        if (listOf(dayDataList).size > 0) {
+
+        //initializing view model of data handler here
+        DataHandler.logDataViewModel = logDataViewModel
+        if (dayDataList.size  < 1) {
+            val a: LocalDateTime? = LocalDateTime.of(2012, 6, 30, 12, 0)
             var metaDataObj = DayMetaData(0,currentTimeInterval,"234","xyz",curretnDriverDlNumber)
             logDataViewModel.insertDayMetaData(metaDataObj)
+            DataHandler.performDutyStatusChanged(startTime = a,description = "sdf",dutyStatus = DutyStatus.OFFDUTY)
         }
     }
 
